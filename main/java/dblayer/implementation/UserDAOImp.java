@@ -1,13 +1,12 @@
 package dblayer.implementation;
-import dblayer.dao.UserDAO;
 
+import dblayer.dao.UserDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import dblayer.connect.DBConnection;
 import dblayer.model.User;
 import util.CustomException;
@@ -18,7 +17,7 @@ public class UserDAOImp implements UserDAO {
     @Override
     public void insert(User user) throws CustomException {
     	Helper.checkNullValues(user);
-    	String INSERT_USER_SQL = "INSERT INTO user (fullname, email, phone, role, username, password, status, created_at, modified_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    	String INSERT_USER_SQL = "INSERT INTO user (fullname, email, phone, role, username, password, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DBConnection.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USER_SQL)) {
             preparedStatement.setString(1, user.getFullname());
@@ -29,7 +28,6 @@ public class UserDAOImp implements UserDAO {
             preparedStatement.setString(6, user.getPassword());
             preparedStatement.setString(7, user.getStatus());
             preparedStatement.setLong(8, user.getCreatedAt());
-            preparedStatement.setLong(9, user.getModifiedAt());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
         	throw new CustomException(e.getMessage());
@@ -46,6 +44,7 @@ public class UserDAOImp implements UserDAO {
             ResultSet rs = preparedStatement.executeQuery();
             if (rs.next()) {
                 user = resultSetToUser(rs);
+                user.setId(rs.getLong("id"));
             }
         } catch (SQLException e) {
         	throw new CustomException(e.getMessage());
@@ -110,7 +109,6 @@ public class UserDAOImp implements UserDAO {
 
     private User resultSetToUser(ResultSet rs) throws SQLException {
         return new User(
-                rs.getLong("id"),
                 rs.getString("fullname"),
                 rs.getString("email"),
                 rs.getLong("phone"),
@@ -118,8 +116,8 @@ public class UserDAOImp implements UserDAO {
                 rs.getString("username"),
                 rs.getString("password"),
                 rs.getString("status"),
-                rs.getLong("createdAt"),
-                rs.getLong("modifiedAt")
+                rs.getLong("created_at"),
+                rs.getLong("modified_at")
         );
     }
 

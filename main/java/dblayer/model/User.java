@@ -13,11 +13,7 @@ public class User {
     private Long createdAt;
     private Long modifiedAt;
 
-    public User() {
-    }
-
-    public User(Long id, String fullname, String email, Long phone, String role, String username, String password, String status, Long createdAt, Long modifiedAt) {
-        this.id = id;
+    public User(String fullname, String email, Long phone, String role, String username, String password, String status, Long createdAt, Long modifiedAt) {
         this.fullname = fullname;
         this.email = email;
         this.phone = phone;
@@ -107,5 +103,20 @@ public class User {
 
     public void setModifiedAt(Long millis) {
         this.modifiedAt = millis;
+    }
+    
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", fullname='" + fullname + '\'' +
+                ", email='" + email + '\'' +
+                ", phone=" + phone +
+                ", role='" + role + '\'' +
+                ", username='" + username + '\'' +
+                ", status='" + status + '\'' +
+                ", createdAt=" + createdAt +
+                ", modifiedAt=" + modifiedAt +
+                '}';
     }
 }

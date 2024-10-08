@@ -1,10 +1,16 @@
 package util;
 
+import java.io.File;
+import java.lang.reflect.Field;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.util.List;
+import java.util.Properties;
+import java.util.Scanner;
 import java.util.regex.Pattern;
 
-
 public class Helper {
-
+	
     private static ThreadLocal<String> threadLocal = ThreadLocal.withInitial(() -> "default");
     
     public static String get() {
@@ -37,17 +43,29 @@ public class Helper {
 		}
 	}
 	
-	public static void checkIndexBounds(int index, int limit) throws CustomException{
-		if (index >= limit || index < 0) {
-			throw new CustomException("Error: The specified index is out of bounds.");
-		}
-	}
-	  
-	public static void checkTwoIndexBounds(int startIndex, int endIndex, int limit) throws CustomException {
-		checkIndexBounds(startIndex, limit);
-	    checkIndexBounds(endIndex, limit);
-	    if (startIndex > endIndex) {
-	        throw new CustomException("Error: The start index is greater than end index.");
-	    }
-	}
+	 public static <T> T mapResultSetToObject(ResultSet resultSet, Class<T> type) throws CustomException {
+        try {
+            if (resultSet.next()) {
+                T instance = type.getDeclaredConstructor().newInstance();
+                ResultSetMetaData metaData = resultSet.getMetaData();
+                int columnCount = metaData.getColumnCount();
+                for (int i = 1; i <= columnCount; i++) {
+                    String columnName = metaData.getColumnLabel(i);
+                    Object columnValue = resultSet.getObject(i);
+                    try {
+                        Field field = type.getDeclaredField(columnName);
+                        field.setAccessible(true);
+                        field.set(instance, columnValue);
+                    } catch (NoSuchFieldException e) {
+                    	throw new CustomException(e.getMessage());
+                    }
+                }
+                return instance;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            throw new CustomException("Error mapping result set to object: " + e.getMessage());
+        }
+    }
 }
