@@ -2,12 +2,21 @@ package util;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+
+import org.apache.catalina.util.CustomObjectInputStream;
+import org.eclipse.jdt.internal.compiler.lookup.ImplicitNullAnnotationVerifier;
+
+import dblayer.connect.DBConnection;
 
 public class Helper {
 	
@@ -35,37 +44,18 @@ public class Helper {
 		}
 	}
 	
+	public static void checkLength(Object[] arr1, Object[] arr2) throws CustomException {
+		if (arr1.length != arr2.length) {
+	        throw new CustomException("Both arrays must have the same length.");
+	    }
+	}
+	
 	public static void checkEmail(String email) throws CustomException {
 		checkNullValues(email);
 		String patternString = "^[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+\\.[a-zA-Z.]{2,18}$";
 		if(!Pattern.matches(patternString, email)) {
 			throw new CustomException("Error: Email is not valid");
 		}
-	}
-	
-	 public static <T> T mapResultSetToObject(ResultSet resultSet, Class<T> type) throws CustomException {
-        try {
-            if (resultSet.next()) {
-                T instance = type.getDeclaredConstructor().newInstance();
-                ResultSetMetaData metaData = resultSet.getMetaData();
-                int columnCount = metaData.getColumnCount();
-                for (int i = 1; i <= columnCount; i++) {
-                    String columnName = metaData.getColumnLabel(i);
-                    Object columnValue = resultSet.getObject(i);
-                    try {
-                        Field field = type.getDeclaredField(columnName);
-                        field.setAccessible(true);
-                        field.set(instance, columnValue);
-                    } catch (NoSuchFieldException e) {
-                    	throw new CustomException(e.getMessage());
-                    }
-                }
-                return instance;
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            throw new CustomException("Error mapping result set to object: " + e.getMessage());
-        }
-    }
+	} 
+	 
 }

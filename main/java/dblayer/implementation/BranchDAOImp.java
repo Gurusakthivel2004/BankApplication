@@ -5,6 +5,7 @@ import dblayer.dao.BranchDAO;
 import dblayer.model.Branch;
 import util.CustomException;
 import util.Helper;
+import util.SQLHelper;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -36,67 +37,18 @@ public class BranchDAOImp implements BranchDAO {
     }
 
     @Override
-    public Branch get(Long id) throws CustomException {
-        Helper.checkNullValues(id);
-        String selectSql = "SELECT * FROM branch WHERE id = ?";
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(selectSql)) {
-            preparedStatement.setLong(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                return convertRStoBranch(resultSet);
-            } else {
-                throw new CustomException("Branch not found with ID: " + id);
-            }
-        } catch (SQLException e) {
-            throw new CustomException(e.getMessage());
-        }
+    public Branch get(String[] selectColumns, String[] conditionalColumns, Object[] values) throws CustomException {
+    	return SQLHelper.get("branch", selectColumns, conditionalColumns, values, Branch.class);
     }
 
     @Override
-    public <T> void update(Long id, Long performerID, String column, T value) throws CustomException {
-        Helper.checkNullValues(id);
-        Helper.checkNullValues(column);
-        Helper.checkNullValues(value);
-        String updateSql = "UPDATE branch SET " + column + " = ? WHERE id = ?";
-        String updateTimeSql = "UPDATE branch SET modified_at = ?, performed_by = ? WHERE id = ?";
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(updateSql);
-             PreparedStatement preparedStatement2 = connection.prepareStatement(updateTimeSql)) {
-            if (value instanceof String) {
-                preparedStatement.setString(1, (String) value);
-            } else if (value instanceof Long) {
-                preparedStatement.setLong(1, (Long) value);
-            } else if (value instanceof Integer) {
-                preparedStatement.setInt(1, (Integer) value);
-            } else if (value instanceof Double) {
-                preparedStatement.setDouble(1, (Double) value);
-            } else {
-                throw new IllegalArgumentException("Unsupported value type: " + value.getClass());
-            }
-            preparedStatement.setLong(2, id);
-            preparedStatement.executeUpdate();
-
-            preparedStatement2.setLong(1, System.currentTimeMillis());
-            preparedStatement2.setLong(2, performerID);
-            preparedStatement2.setLong(3, id);
-            preparedStatement2.executeUpdate();
-        } catch (SQLException e) {
-            throw new CustomException(e.getMessage());
-        }
+    public void update(String[] columns, Object[] values) throws CustomException {
+    	SQLHelper.update("branch", columns, values);
     }
 
     @Override
-    public void delete(Long id) throws CustomException {
-        Helper.checkNullValues(id);
-        String deleteSql = "DELETE FROM branch WHERE id = ?";
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(deleteSql)) {
-            preparedStatement.setLong(1, id);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new CustomException(e.getMessage());
-        }
+    public void delete(String[] columns, Object[] values) throws CustomException {
+    	SQLHelper.delete("branch", columns, values);
     }
 
     @Override
@@ -107,7 +59,7 @@ public class BranchDAOImp implements BranchDAO {
              PreparedStatement preparedStatement = connection.prepareStatement(selectAllSql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
-                branches.add(Helper.mapResultSetToObject(resultSet, Branch.class));
+                branches.add(SQLHelper.mapResultSetToObject(resultSet, Branch.class, "branch"));
             }
         } catch (SQLException e) {
             throw new CustomException(e.getMessage());

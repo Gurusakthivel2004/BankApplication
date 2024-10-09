@@ -2,6 +2,7 @@ package runner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import dblayer.dao.CustomerDAO;
 import dblayer.dao.UserDAO;
@@ -14,22 +15,23 @@ import dblayer.model.User;
 import dblayer.dao.BranchDAO;
 import dblayer.implementation.BranchDAOImp;
 import util.CustomException;
+import util.Helper;
+import util.JsonUtil;
 
 public class DBRunner {
 	public static void main(String[] args) {
+		branchTest();
 	}
-	public void branchTest() {
+	public static void branchTest() {
 		BranchDAO branchDAO = new BranchDAOImp();
-        Branch branch = new Branch("HDFC0001234", "9876543210", "HDFC Bank", "123 Main St, City", 
-                System.currentTimeMillis(), null, 1L);
         try {
-            branchDAO.insert(branch);
-            Branch retrievedBranch = branchDAO.get(1L);
+//            branchDAO.insert(branch);
+            Branch retrievedBranch = branchDAO.get(new String[] {"*"}, new String[] {"id"}, new Object[] {3L});
             System.out.println("Retrieved Branch: " + retrievedBranch);
-            branchDAO.update(L,  "name", "HDFC Branch Updated");
-            Branch updatedBranch = branchDAO.get(1L);
+            branchDAO.update(new String[] {"name", "contact_number", "id"}, new Object[] {"ICICI", 9361661639L,  3L});
+            Branch updatedBranch = branchDAO.get(new String[] {"*"}, new String[] {"id"}, new Object[] {3L});
             System.out.println("Updated Branch: " + updatedBranch);
-            branchDAO.delete(1L);
+//            branchDAO.delete(1L);
             List<Branch> allBranches = branchDAO.findAll();
             System.out.println("All Branches: " + allBranches);
 
@@ -37,7 +39,7 @@ public class DBRunner {
             e.printStackTrace();
         }
 	}
-	public void userTest() {
+	public static void userTest() {
 		UserDAO userDAO = new UserDAOImp();
 		User userPojo = new User("gurusakthivel", "vijayguru2004@gmail,com", 9361409778l, "Customer", "guru", "leo", "Active", System.currentTimeMillis(), null);
 		try {

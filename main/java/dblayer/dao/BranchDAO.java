@@ -8,11 +8,11 @@ public interface BranchDAO {
 	
     void insert(Branch branch) throws CustomException;
     
-    Branch get(Long id) throws CustomException;
+    Branch get(String[] selectColumns, String[] conditionalColumns, Object[] values) throws CustomException;
     
-    <T> void update(Long id, Long performerID, String column, T value) throws CustomException;
+    void update(String[] columns, Object[] values) throws CustomException;
     
-    void delete(Long id) throws CustomException;
+    void delete(String[] columns, Object[] values) throws CustomException;
     
     List<Branch> findAll() throws CustomException;
     

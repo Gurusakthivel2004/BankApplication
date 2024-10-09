@@ -11,18 +11,6 @@ public class Branch {
     private Long modifiedAt;
     private Long performedBy;
 
-    public Branch(String ifscCode, String contactNumber, String name, String address, Long createdAt, Long modifiedAt, Long performedBy) {
-        this.ifscCode = ifscCode;
-        this.contactNumber = contactNumber;
-        this.name = name;
-        this.address = address;
-        this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
-        this.performedBy = performedBy;
-    }
-
-    public Branch() {}
-
 	public Long getId() {
         return id;
     }

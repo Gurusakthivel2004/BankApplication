@@ -11,6 +11,7 @@ import dblayer.connect.DBConnection;
 import dblayer.model.User;
 import util.CustomException;
 import util.Helper;
+import util.SQLHelper;
 
 public class UserDAOImp implements UserDAO {
 	
@@ -43,7 +44,7 @@ public class UserDAOImp implements UserDAO {
             preparedStatement.setLong(1, id);
             ResultSet rs = preparedStatement.executeQuery();
             if (rs.next()) {
-                user = resultSetToUser(rs);
+                user = SQLHelper.mapResultSetToObject(rs, User.class, "user");
                 user.setId(rs.getLong("id"));
             }
         } catch (SQLException e) {
@@ -98,27 +99,12 @@ public class UserDAOImp implements UserDAO {
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM user")) {
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                users.add(resultSetToUser(rs));
+                users.add(SQLHelper.mapResultSetToObject(rs, User.class, "user"));
             }
         } catch (SQLException e) {
         	throw new CustomException(e.getMessage());
         }
         return users;
-    }
-
-
-    private User resultSetToUser(ResultSet rs) throws SQLException {
-        return new User(
-                rs.getString("fullname"),
-                rs.getString("email"),
-                rs.getLong("phone"),
-                rs.getString("role"),
-                rs.getString("username"),
-                rs.getString("password"),
-                rs.getString("status"),
-                rs.getLong("created_at"),
-                rs.getLong("modified_at")
-        );
     }
 
 }
