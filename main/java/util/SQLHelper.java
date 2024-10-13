@@ -6,8 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-
+import java.util.stream.Collectors;
 import dblayer.connect.DBConnection;
 
 public class SQLHelper {
@@ -17,7 +20,7 @@ public class SQLHelper {
         	T instance = type.getDeclaredConstructor().newInstance();
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
-            Map<String, String> map = JsonUtil.getMapping(tableName);
+            Map<String, String> map = YamlUtil.getMapping(tableName);
             for (int i = 1; i <= columnCount; i++) {
                 String columnName = metaData.getColumnName(i);
                 Object columnValue = resultSet.getObject(i);
@@ -36,24 +39,25 @@ public class SQLHelper {
     }
 	
 	private static ResultSet setPreparedStatementValue(String query, Object[] values) throws CustomException {
+		Helper.checkNullValues(query);
 		try{
 			Connection connection = DBConnection.getConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(query);
-        	for(int i=1;i<=values.length;i++) {
-        		Object value = values[i-1];
-        		 if (value instanceof String) {
-        		        preparedStatement.setString(i, (String) value);
-        		    } else if (value instanceof Long) {
-        		        preparedStatement.setLong(i, (Long) value);
-        		    } else if (value instanceof Integer) {
-        		        preparedStatement.setInt(i, (Integer) value);
-        		    } else if (value instanceof Double) {
-        		        preparedStatement.setDouble(i, (Double) value);
-        		    } else {
-        		        throw new CustomException("Unsupported value type: " + value.getClass());
-        		    }
+			if(values != null) { 
+	        	for(int i=1;i<=values.length;i++) {
+	        		Object value = values[i-1];
+	        		if(value == null) {
+	        			preparedStatement.setNull(i, Types.NULL);
+	    		    } 
+	        		preparedStatement.setObject(i, value);
+	        	}
+			}
+        	if(query.contains("SELECT")) {
+        		return preparedStatement.executeQuery();
+        	} else {
+        		preparedStatement.execute();
+        		return null;
         	}
-            return preparedStatement.executeQuery();
         } catch (SQLException e) {
         	throw new CustomException(e.getMessage());
         }
@@ -74,7 +78,6 @@ public class SQLHelper {
     		}
     	}
     	updateSql.append("WHERE " + columns[len-1] + " = ?;" );
-    	System.out.print(updateSql);
     	setPreparedStatementValue(updateSql.toString(),values);
     }
 	
@@ -93,11 +96,9 @@ public class SQLHelper {
 	    setPreparedStatementValue(deleteSql.toString(),values);
 	}
 	
-	public static <T> T get(String table, String[] selectColumns, String[] conditionColumns, Object[] conditionValues, Class<T> clazz) throws CustomException {
+	public static <T> List<T> get(String table, Class<T> clazz, String[] selectColumns, String[] conditionColumns, Object[] conditionValues) throws CustomException {
 	    Helper.checkNullValues(table);
 	    Helper.checkNullValues(selectColumns);
-	    Helper.checkNullValues(conditionColumns);
-	    Helper.checkNullValues(conditionValues);
 	    Helper.checkNullValues(clazz);
 	    Helper.checkLength(conditionColumns, conditionValues);
 	    
@@ -108,22 +109,68 @@ public class SQLHelper {
 	            selectSql.append(", ");
 	        }
 	    }
-	    selectSql.append(" FROM ").append(table).append(" WHERE ");
-	    for (int i = 0; i < conditionColumns.length; i++) {
-	        selectSql.append(conditionColumns[i]).append(" = ?");
-	        if (i < conditionColumns.length - 1) {
-	            selectSql.append(" AND ");
-	        }
+	    selectSql.append(" FROM ").append(table);
+	    System.out.println(conditionColumns[0]);
+	    if(conditionColumns != null) {
+	    	selectSql.append(" WHERE ");
+	    	for (int i = 0; i < conditionColumns.length; i++) {
+		        selectSql.append(conditionColumns[i]).append(" = ?");
+		        if (i < conditionColumns.length - 1) {
+		            selectSql.append(" AND ");
+		        }
+		    }
 	    }
-	    try(ResultSet resultSet = setPreparedStatementValue(selectSql.toString(),conditionValues);) {
-	    	 if (resultSet.next()) {
-	             return SQLHelper.mapResultSetToObject(resultSet, clazz, table);
-	         } else {
-	             throw new CustomException(clazz.getSimpleName() + " not found with specified criteria.");
-	         }
+	    List<T> list = new ArrayList<T>();
+	    System.out.println(selectSql);
+	    try(ResultSet resultSet = setPreparedStatementValue(selectSql.toString(), conditionValues);) {
+	    	 while (resultSet.next()) {
+	             list.add(mapResultSetToObject(resultSet, clazz, table));
+	         } 
+	    	 return list;
 	    } catch (SQLException e) {
         	throw new CustomException(e.getMessage());
 		}
+	}
+
+	public static void insert(String table, Object pojo) throws CustomException {
+	    Helper.checkNullValues(table);
+	    Helper.checkNullValues(pojo);
+	    
+	    Map<String, String> map = YamlUtil.getMapping(table);
+	    Map<String, String> fieldToColumnMap = map.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+	    
+	    Class<?> clazz = pojo.getClass();
+	    Field[] fields = clazz.getDeclaredFields();
+	    int length = fields.length, ctr = 0;
+	    StringBuilder insertSql = new StringBuilder("INSERT INTO ").append(table).append(" (");
+	    List<Object> values = new ArrayList<>();
+	    for(int i=0;i<length;i++) {
+	    	Field field = fields[i];
+	    	if(field.getName() == "id") {
+	    		continue;
+	    	}
+	        field.setAccessible(true); 
+	        try {
+	        	insertSql.append(fieldToColumnMap.get(field.getName()));
+	        	if (i < length - 1) {
+		            insertSql.append(", ");
+		        }
+	            values.add(field.get(pojo));
+	        } catch (IllegalAccessException e) {
+	            throw new CustomException("Error accessing field value: " + e.getMessage());
+	        }
+	        ctr++;
+	    }
+	    insertSql.append(") VALUES (");
+	    for (int i=0;i<ctr;i++) {
+	        insertSql.append("?");
+	        if (i < ctr - 1) {
+	            insertSql.append(", ");
+	        }
+	    }
+	    insertSql.append(");");
+	    System.out.println(insertSql.toString());
+	    setPreparedStatementValue(insertSql.toString(), values.toArray());
 	}
 
 }

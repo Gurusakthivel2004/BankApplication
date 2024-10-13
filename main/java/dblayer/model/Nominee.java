@@ -8,12 +8,6 @@ public class Nominee {
 
     public Nominee() {}
     
-    public Nominee(Long userID, String name, String relationship) {
-    	this.userID = userID;
-        this.name = name;
-        this.relationship = relationship;
-    }
-
     public Long getUserId() {
         return userID;
     }
@@ -43,7 +37,6 @@ public class Nominee {
         return "Nominee{" +
                 "id=" + userID +
                 ", name='" + name + '\'' +
-                ", relationship ='" + relationship + '\'' +
-                '}';
+                ", relationship ='" + relationship + '\'' + '}';
     }
 }

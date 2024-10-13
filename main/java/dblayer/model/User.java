@@ -13,18 +13,6 @@ public class User {
     private Long createdAt;
     private Long modifiedAt;
 
-    public User(String fullname, String email, Long phone, String role, String username, String password, String status, Long createdAt, Long modifiedAt) {
-        this.fullname = fullname;
-        this.email = email;
-        this.phone = phone;
-        this.role = role;
-        this.username = username;
-        this.password = password;
-        this.status = status;
-        this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
-    }
-
     public Long getId() {
         return id;
     }
