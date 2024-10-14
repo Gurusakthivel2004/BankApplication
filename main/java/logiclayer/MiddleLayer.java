@@ -1,25 +1,34 @@
 package logiclayer;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import dblayer.dao.CrudDAO;
-import dblayer.dao.TransactionDAO;
-import dblayer.implementation.CrudDAOImp;
-import dblayer.implementation.TransactionDAOImp;
+
+import dblayer.dao.AccountDAO;
+import dblayer.dao.CustomerDAO;
+import dblayer.dao.UserDAO;
+import dblayer.implementation.AccountDAOImp;
+import dblayer.implementation.CustomerDAOImp;
+import dblayer.implementation.UserDAOImp;
 import dblayer.model.Account;
+import dblayer.model.ColumnCriteria;
+import dblayer.model.Criteria;
 import dblayer.model.Customer;
 import dblayer.model.CustomerDetail;
 import dblayer.model.Nominee;
 import dblayer.model.Transaction;
+import dblayer.model.Transaction.TransactionType;
 import dblayer.model.User;
 import util.CustomException;
 import util.Helper;
 
 public class MiddleLayer {
 	
-	private CrudDAO crudDAO = new CrudDAOImp();
-	private TransactionDAO transactionDAO = new TransactionDAOImp();
-	
 	ThreadLocal<Long> threadLocal;
+	private static UserDAO userDAO = new UserDAOImp();
+	private static CustomerDAO customerDAO = new CustomerDAOImp();
+	private static AccountDAO accountDAO = new AccountDAOImp();
 	
 	private MiddleLayer() {}
 
@@ -31,42 +40,49 @@ public class MiddleLayer {
         return SingletonHelper.INSTANCE;
     }
     
-    public boolean storeUser(User user) throws CustomException {
+    public void storeUser(User user) throws CustomException {
     	Helper.checkEmail(user.getEmail());
     	Helper.checkNumber(user.getPhone() + "");
     	String hashedPassword = Helper.hashPassword(user.getPassword());
     	user.setPassword(hashedPassword);
-    	crudDAO.insert("user", user);
-    	return true;
+    	userDAO.insertUser(user);
     }
     
     public <T> boolean storeCustomer(String table, T obj) throws CustomException {
     	if(obj instanceof Customer) {
     	    Customer customer = (Customer) obj;
-    	    Helper.checkRole("customer", Customer.class, customer.getUserID());
+    	    Helper.checkRole(customer.getUserID(), "customer");
     	} else if(obj instanceof CustomerDetail) {
     		CustomerDetail customerDetail = (CustomerDetail) obj;
-    		Helper.checkRole("customer", CustomerDetail.class, customerDetail.getUserID());
+    	    Helper.checkRole(customerDetail.getUserID(), "customer");
     	} else if(obj instanceof Nominee) {
     		Nominee nominee = (Nominee) obj;
-    		Helper.checkRole("customer", Nominee.class, nominee.getUserId());
+    	    Helper.checkRole(nominee.getUserId(), "customer");
     	}
-    	crudDAO.insert(table, obj);
+    	customerDAO.insertCustomer("customer", obj);
     	return true;
     }
     
-    public void storeAccount(Account account) throws CustomException {
-    	crudDAO.insert("account", account);
-    }
-    
-    public List<Transaction> getTransaction() throws CustomException {
-    	long userID = Helper.get();
-    	return transactionDAO.getTransactions(userID);
-    }
-    
-    public <T> List<T> getDetails(String table, Class<T> clazz) throws CustomException {
-    	long userID = Helper.get();
-    	return crudDAO.get(table, clazz, new String[] {"*"}, new String[] {"user_id"}, new Object[] {userID});
+    public void sendAmount(Transaction transaction) throws CustomException {
+    	Criteria criteria = new Criteria();
+    	criteria.setColumn("account_number");
+    	criteria.setOperator("=");
+    	criteria.setValue(transaction.getTransactionAccountNumber());
+    	Account account = accountDAO.getAccount(new ArrayList<String>(Arrays.asList("customer_id", "balance")), 
+    			new ArrayList<Criteria>(Arrays.asList(criteria))).get(0);
+    	if(account == null) {
+    		throw new CustomException("Transaction account doesnt exists");
+    	}
+    	BigDecimal transAccountupdatedBalance = account.getBalance().add(transaction.getAmount());
+    	crudDAO.update("account", new String[] {"balance, modified_at, customer_id"}, new Object[] {transaction.getClosingBalance(), System.currentTimeMillis(), transaction.getCustomerId()});
+    	crudDAO.update("account", new String[] {"balance, modified_at, customer_id"}, new Object[] {transAccountupdatedBalance, System.currentTimeMillis(), account.getCustomerId()});
+    	crudDAO.insert("transaction", transaction);
+    	transaction.setCustomerId(account.getCustomerId());
+    	transaction.setTransactionAccountNumber(transaction.getAccountNumber());
+    	transaction.setAccountNumber(account.getAccountNumber());
+    	transaction.setTransactionType(TransactionType.CREDIT);	
+    	transaction.setClosingBalance(transAccountupdatedBalance);
+    	crudDAO.insert("transaction", transaction);
     }
 	
 }

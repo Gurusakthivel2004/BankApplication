@@ -5,11 +5,8 @@ import java.math.BigDecimal;
 public class Transaction {
 	
 	public enum TransactionType {
-	    DEPOSIT,
-	    WITHDRAWAL,
-	    TRANSFER,
-	    PAYMENT,
-	    REFUND
+	    CREDIT,
+	    DEBIT
 	}
 	
 	public enum TransactionStatus {
@@ -20,7 +17,7 @@ public class Transaction {
 	}
 
     private Long id;
-    private Long customerId;
+    private Long customerID;
     private Long accountNumber;
     private Long transactionAccountNumber;
     private TransactionType transactionType;
@@ -42,11 +39,11 @@ public class Transaction {
     }
 
     public Long getCustomerId() {
-        return customerId;
+        return customerID;
     }
 
     public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
+        this.customerID = customerId;
     }
 
     public Long getAccountNumber() {
@@ -125,7 +122,7 @@ public class Transaction {
     public String toString() {
         return "Transaction{" +
                 "id=" + id +
-                ", customerId=" + customerId +
+                ", customerId=" + customerID +
                 ", accountNumber=" + accountNumber +
                 ", transactionAccountNumber=" + transactionAccountNumber +
                 ", transactionType=" + transactionType +

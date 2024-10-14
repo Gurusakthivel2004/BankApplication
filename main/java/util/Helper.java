@@ -1,19 +1,23 @@
 package util;
 
 import java.io.BufferedReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dblayer.dao.CrudDAO;
-import dblayer.implementation.CrudDAOImp;
+import dblayer.dao.UserDAO;
+import dblayer.implementation.UserDAOImp;
+import dblayer.model.ColumnCriteria;
+import dblayer.model.Criteria;
 import dblayer.model.User;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class Helper {
 	
     private static ThreadLocal<Long> threadLocal = ThreadLocal.withInitial(() -> 0l);
-    private static CrudDAO crudDAO = new CrudDAOImp();
+    private static UserDAO userDAO = new UserDAOImp();
     
     public static Long get() {
     	return threadLocal.get();
@@ -37,21 +41,35 @@ public class Helper {
 	   }
 	}
     
-    public static <T> void checkRole(String table, Class<T> clazz, long userID) throws CustomException {
-    	List<User> rows = crudDAO.get("user", User.class, new String[]{"*"}, new String[] {"id"}, new Object[] {userID});
+    public static void checkRole(long userID, String role) throws CustomException {
+    	ColumnCriteria columnCriteria = new ColumnCriteria();
+    	columnCriteria.setColumn("role");
+    	Criteria criteria = new Criteria();
+    	criteria.setColumn("id");
+    	criteria.setOperator("=");
+    	criteria.setValue(userID);
+    	List<User> rows = userDAO.getUser(new ArrayList<ColumnCriteria>(Arrays.asList(columnCriteria)), 
+    			new ArrayList<Criteria>(Arrays.asList(criteria)));
     	if(rows.size() == 0) {
     		throw new CustomException("User doesn't exists.");
-    	} else if(!rows.get(0).getRole().equals(table)) {
+    	} else if(!rows.get(0).getRole().equals(role)) {
     		throw new CustomException("User role mismatch.");
     	}
     }
     
     public static boolean checkUserPassword(String username, String password) throws CustomException {
-    	List<User> users = crudDAO.get("user", User.class, new String[]{"*"}, new String[] {"username"}, new Object[] {username});
-    	if(users.size() == 0) {
+    	ColumnCriteria columnCriteria = new ColumnCriteria();
+    	columnCriteria.setColumn("password");
+    	Criteria criteria = new Criteria();
+    	criteria.setColumn("username");
+    	criteria.setOperator("=");
+    	criteria.setValue(username);
+    	List<User> rows = userDAO.getUser(new ArrayList<ColumnCriteria>(Arrays.asList(columnCriteria)), 
+    			new ArrayList<Criteria>(Arrays.asList(criteria)));
+    	if(rows.size() == 0) {
     		throw new CustomException("No user exists with the username");
     	}
-    	return Helper.checkPassword(password, users.get(0).getPassword());
+    	return Helper.checkPassword(password, rows.get(0).getPassword());
     }
 	
 	public static void checkNumber(String number) throws CustomException {
@@ -79,7 +97,7 @@ public class Helper {
 	} 
 	
 	public static <T> T convertJson(HttpServletRequest request, Class<T> clazz) throws CustomException {
-   	 StringBuilder jsonString = new StringBuilder();
+   	 	StringBuilder jsonString = new StringBuilder();
         String line;
         try (BufferedReader reader = request.getReader()) {
             while ((line = reader.readLine()) != null) {

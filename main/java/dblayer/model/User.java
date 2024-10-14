@@ -102,6 +102,7 @@ public class User {
                 ", phone=" + phone +
                 ", role='" + role + '\'' +
                 ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
                 ", status='" + status + '\'' +
                 ", createdAt=" + createdAt +
                 ", modifiedAt=" + modifiedAt +

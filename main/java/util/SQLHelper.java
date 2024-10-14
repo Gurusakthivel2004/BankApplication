@@ -12,9 +12,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import dblayer.connect.DBConnection;
+import dblayer.model.ColumnCriteria;
+import dblayer.model.Criteria;
 
 public class SQLHelper {
 	
+	// map the column name to field name of the pojo class
 	public static <T> T mapResultSetToObject(ResultSet resultSet, Class<T> type, String tableName) throws CustomException {
 		try {
         	T instance = type.getDeclaredConstructor().newInstance();
@@ -38,6 +41,7 @@ public class SQLHelper {
         }
     }
 	
+	// execute the query by adding the values
 	private static ResultSet setPreparedStatementValue(String query, Object[] values) throws CustomException {
 		Helper.checkNullValues(query);
 		try{
@@ -62,76 +66,167 @@ public class SQLHelper {
         	throw new CustomException(e.getMessage());
         }
 	}
-	 
-	public static void update(String table, String[] columns, Object[] values) throws CustomException {
-		Helper.checkNullValues(table);
-    	Helper.checkNullValues(columns);
-    	Helper.checkNullValues(values);
-	    Helper.checkLength(columns, values);
-	    
-    	int len = columns.length;
-    	StringBuilder updateSql = new StringBuilder("UPDATE " + table + " SET ");
-    	for(int i=0;i<len-1;i++) {
-    		updateSql.append(columns[i] + " = ? " );
-    		if(i <= len-3) {
-    			updateSql.append(", ");
-    		}
-    	}
-    	updateSql.append("WHERE " + columns[len-1] + " = ?;" );
-    	setPreparedStatementValue(updateSql.toString(),values);
-    }
 	
-	public static void delete(String table, String[] columns, Object[] values) throws CustomException {
-	    Helper.checkNullValues(table);
-	    Helper.checkNullValues(columns);
-	    Helper.checkNullValues(values);
-	    Helper.checkLength(columns, values);
-	    StringBuilder deleteSql = new StringBuilder("DELETE FROM ").append(table).append(" WHERE ");
-	    for (int i = 0; i < columns.length; i++) {
-	        deleteSql.append(columns[i]).append(" = ?");
-	        if (i < columns.length - 1) {
-	            deleteSql.append(" AND ");
+	// @AppendQuery method
+	// sql : sql string to be appended.
+	// conditions : It contains the criteria that has to be included in that query (WHERE clause).
+	// conditionValues : It contains the values of the placeholder(?) in the query.
+	private static void QueryBuilder(StringBuilder sql, List<Criteria> conditions, List<Object> conditionValues) {
+	    for (int i = 0; i < conditions.size(); i++) {
+	        Criteria condition = conditions.get(i);
+	        if(condition.getColumn() != null) {
+	        	sql.append(condition.getColumn()).append(" ");
+	        }
+	        switch (condition.getOperator().toUpperCase()) {
+	            case "IN":
+	                sql.append("IN (");
+	                for (int j = 0; j < condition.getValues().size(); j++) {
+	                    sql.append("?");
+	                    conditionValues.add(condition.getValues().get(j));
+	                    if (j < condition.getValues().size() - 1) {
+	                        sql.append(", ");
+	                    }
+	                }
+	                sql.append(")");
+	                break;
+
+	            case "BETWEEN":
+	                if (condition.getValues().size() == 2) {
+	                    sql.append("BETWEEN ? AND ?");
+	                    conditionValues.addAll(condition.getValues());
+	                }
+	                break;
+
+	            case "LIKE":
+	                sql.append("LIKE ?");
+	                conditionValues.add(condition.getValue());
+	                break;
+
+	            case "NOT":
+	                sql.append("NOT ");
+	                break;
+
+	            case "&": 
+	            case "|": 
+	            case "^": 
+	            case "+":
+	            case "-":
+	            case "*":
+	            case "/":
+	            case "=":
+	            case ">":
+	            case "<":
+	            case ">=":
+	            case "<=":
+	                sql.append(condition.getOperator()).append(" ?");
+	                conditionValues.add(condition.getValue());
+	                break;
+
+	            case "AND":
+	            case "OR":
+	                sql.append(" ").append(condition.getOperator()).append(" ");
+	                break;
+
+	            default:
+	                throw new IllegalArgumentException("Unsupported operator: " + condition.getOperator());
 	        }
 	    }
-	    setPreparedStatementValue(deleteSql.toString(),values);
-	}
-	
-	public static <T> List<T> get(String table, Class<T> clazz, String[] selectColumns, String[] conditionColumns, Object[] conditionValues) throws CustomException {
-	    Helper.checkNullValues(table);
-	    Helper.checkNullValues(selectColumns);
-	    Helper.checkNullValues(clazz);
-	    Helper.checkLength(conditionColumns, conditionValues);
-	    
-	    StringBuilder selectSql = new StringBuilder("SELECT ");
-	    for (int i = 0; i < selectColumns.length; i++) {
-	        selectSql.append(selectColumns[i]);
-	        if (i < selectColumns.length - 1) {
-	            selectSql.append(", ");
-	        }
-	    }
-	    selectSql.append(" FROM ").append(table);
-	    System.out.println(conditionColumns[0]);
-	    if(conditionColumns != null) {
-	    	selectSql.append(" WHERE ");
-	    	for (int i = 0; i < conditionColumns.length; i++) {
-		        selectSql.append(conditionColumns[i]).append(" = ?");
-		        if (i < conditionColumns.length - 1) {
-		            selectSql.append(" AND ");
-		        }
-		    }
-	    }
-	    List<T> list = new ArrayList<T>();
-	    System.out.println(selectSql);
-	    try(ResultSet resultSet = setPreparedStatementValue(selectSql.toString(), conditionValues);) {
-	    	 while (resultSet.next()) {
-	             list.add(mapResultSetToObject(resultSet, clazz, table));
-	         } 
-	    	 return list;
-	    } catch (SQLException e) {
-        	throw new CustomException(e.getMessage());
-		}
 	}
 
+	
+	// @Update method
+	// table : name of the table.
+	// columnCriteriaList : it contains the column and value to be updated.
+	// conditions : It contains the criteria that has to be included in that query (WHERE clause).
+	public static void update(String table, List<ColumnCriteria> columnCriteriaList, List<Criteria> conditions) throws CustomException {
+	    Helper.checkNullValues(table);
+	    Helper.checkNullValues(columnCriteriaList);
+	    if (columnCriteriaList.isEmpty()) {
+	        throw new IllegalArgumentException("No columns to update.");
+	    }
+	    StringBuilder updateSql = new StringBuilder("UPDATE " + table + " SET ");
+	    Object[] values = new Object[columnCriteriaList.size()];
+	    for (int i = 0; i < columnCriteriaList.size(); i++) {
+	        ColumnCriteria criteria = columnCriteriaList.get(i);
+	        updateSql.append(criteria.getColumn()).append(" = ?");
+	        values[i] = criteria.getValue(); 
+	        if (i < columnCriteriaList.size() - 1) {
+	            updateSql.append(", ");
+	        }
+	    }
+	    if (conditions != null && !conditions.isEmpty()) {
+	        updateSql.append(" WHERE ");
+	        List<Object> conditionValues = new ArrayList<>(); 
+	        QueryBuilder(updateSql, conditions, conditionValues);
+	        Object[] finalValues = new Object[values.length + conditionValues.size()];
+	        System.arraycopy(values, 0, finalValues, 0, values.length);
+	        System.arraycopy(conditionValues.toArray(), 0, finalValues, values.length, conditionValues.size());
+	        setPreparedStatementValue(updateSql.toString(), finalValues);
+	    } else {
+	        setPreparedStatementValue(updateSql.toString(), values);
+	    }
+	}
+
+	// @Delete method
+	// table : name of the table.
+	// conditions : It contains the criteria that has to be included in that query (WHERE clause).
+	public static void delete(String table, List<Criteria> conditions) throws CustomException {
+	    Helper.checkNullValues(table);
+	    Helper.checkNullValues(conditions);
+	    if (conditions.isEmpty()) {
+	        throw new IllegalArgumentException("No criteria for deletion.");
+	    }
+	    StringBuilder deleteSql = new StringBuilder("DELETE FROM ").append(table).append(" WHERE ");
+	    List<Object> values = new ArrayList<>();
+
+	    QueryBuilder(deleteSql, conditions, values);
+	    
+	    setPreparedStatementValue(deleteSql.toString(), values.toArray());
+	}
+	
+	// @Get method
+	// table : name of the table.
+	// clazz : class of the pojo to be returned.
+	// columnCriteriaList : it contains the column and value to be updated.
+	// conditions : It contains the criteria that has to be included in that query (WHERE clause).
+	public static <T> List<T> get(String table,
+			Class<T> clazz,
+			List<String> selectColumns,
+			List<Criteria> conditions) throws CustomException {
+		
+        Helper.checkNullValues(table);
+        Helper.checkNullValues(selectColumns);
+        Helper.checkNullValues(clazz);
+
+        StringBuilder selectSql = new StringBuilder("SELECT ");
+        for (int i = 0; i < selectColumns.size(); i++) {
+	        selectSql.append(selectColumns.get(i));
+	        if (i < selectColumns.size() - 1) {
+	        	selectSql.append(", ");
+	        }
+	    }
+        selectSql.append(" FROM ").append(table);
+
+        List<Object> conditionValues = new ArrayList<>();
+        if (conditions != null && !conditions.isEmpty()) {
+            selectSql.append(" WHERE ");
+            QueryBuilder(selectSql, conditions, conditionValues);
+        }
+        System.out.println(selectSql);
+        List<T> list = new ArrayList<>();
+        try (ResultSet resultSet = setPreparedStatementValue(selectSql.toString(), conditionValues.toArray())) {
+            while (resultSet.next()) {
+                list.add(mapResultSetToObject(resultSet, clazz, table));
+            }
+            return list;
+        } catch (SQLException e) {
+            throw new CustomException("Error executing SELECT query: " + e.getMessage());
+        }
+    }
+	
+	// @Insert method
+	// table : name of the table.
+	// pojo : pojo class
 	public static void insert(String table, Object pojo) throws CustomException {
 	    Helper.checkNullValues(table);
 	    Helper.checkNullValues(pojo);

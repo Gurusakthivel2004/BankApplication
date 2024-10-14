@@ -19,7 +19,7 @@ user:
   status: status
   created_at: createdAt
   modified_at: modifiedAt
-  
+
 customer:
   user_id: userID
   pan_number: panNumber
@@ -27,7 +27,7 @@ customer:
   created_at: createdAt
   modified_at: modifiedAt
   performed_by: performedBy
-  
+
 customerDetail:
   user_id: userID
   dob: dob
@@ -35,12 +35,12 @@ customerDetail:
   mother_name: motherName
   address: address
   marital_status: maritalStatus
-  
+
 nominee:
   user_id: userID
   name: name
   relationship: relationship
-  
+
 account:
   account_number: accountNumber
   branch_id: branchId
@@ -52,6 +52,23 @@ account:
   created_at: createdAt
   modified_at: modifiedAt
   performed_by: performedBy
-	
-	
-	
+
+staff:
+  user_id: userID
+  branch_id: branchID
+  created_at: createdAt
+  modified_at: modifiedAt
+  performed_by: performedBy
+
+transaction:
+  id: id
+  customer_id: customerID
+  account_number: accountNumber
+  transaction_account_number: transactionAccountNumber
+  transaction_type: transactionType
+  status: status
+  remarks: remarks
+  amount: amount
+  closing_balance: closingBalance
+  transaction_time: transactionTime
+  performed_by: performedBy

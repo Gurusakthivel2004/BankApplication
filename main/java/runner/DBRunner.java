@@ -9,6 +9,7 @@ import dblayer.dao.UserDAO;
 import dblayer.implementation.CustomerDAOImp;
 import dblayer.implementation.UserDAOImp;
 import dblayer.model.Branch;
+import dblayer.model.Criteria;
 import dblayer.model.Customer;
 import dblayer.model.CustomerDetail;
 import dblayer.model.Nominee;
@@ -20,12 +21,24 @@ import dblayer.implementation.BranchDAOImp;
 import dblayer.implementation.CrudDAOImp;
 import util.CustomException;
 import util.Helper;
+import util.SQLHelper;
 import util.YamlUtil;
 
 public class DBRunner {
 	public static void main(String[] args) {
-		customerTest();
-		
+		try {
+            List<Criteria> conditions = new ArrayList<>();
+            Criteria statusCriteria = new Criteria();
+            statusCriteria.setColumn("id");
+            statusCriteria.setOperator("=");
+            statusCriteria.setValue(3l);
+            conditions.add(statusCriteria);
+            
+            List<User> activeCustomers = SQLHelper.get("user", User.class, new String[]{"*"}, conditions);
+            System.out.println("Active Customers: " + activeCustomers);
+        } catch (CustomException e) {
+            System.out.print("Exception thrown while retrieving active customers: " + e.getMessage());
+        }
 	}
 	public static void branchTest() {
 		BranchDAO branchDAO = new BranchDAOImp();
