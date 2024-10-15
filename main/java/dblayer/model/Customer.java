@@ -1,6 +1,8 @@
 package dblayer.model;
 
-public class Customer {
+import java.util.List;
+
+public class Customer extends User {
 	
     private Long userID;
     private String panNumber;

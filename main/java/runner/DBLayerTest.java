@@ -47,42 +47,34 @@ public class DBLayerTest {
 //		} catch (CustomException e) {
 //          System.out.print("Exception thrown while retrieving active customers: " + e.getMessage());
 //      }
-
-		
-
 	}
 	
     void testGetActiveCustomers() {
-//    	try {
-            List<Criteria> conditions = new ArrayList<>();
-            Criteria statusCriteria = new Criteria();
-            statusCriteria.setColumn("id");
-            statusCriteria.setOperator("=");
-            statusCriteria.setValue(3l);
-            conditions.add(statusCriteria);
-            
-            Criteria statusCriteria3 = new Criteria();
-            statusCriteria3.setOperator("OR");
-            conditions.add(statusCriteria3);
-            
-            Criteria statusCriteria2 = new Criteria();
-            statusCriteria2.setColumn("username");
-            statusCriteria2.setOperator("=");
-            statusCriteria2.setValue("guru");
-            conditions.add(statusCriteria2);
-            
-            UserDAO userDAO = new UserDAOImp();
-            List<User> activeCustomers;
+		 List<Criteria> conditions = new ArrayList<>();
+	     Criteria statusCriteria = new Criteria();
+	     statusCriteria.setColumn("id");
+	     statusCriteria.setOperator("=");
+	     statusCriteria.setValue(3l);
+	     conditions.add(statusCriteria);
+	     
+	     Criteria statusCriteria3 = new Criteria();
+	     statusCriteria3.setOperator("OR");
+	     conditions.add(statusCriteria3);
+	     
+	     Criteria statusCriteria2 = new Criteria();
+	     statusCriteria2.setColumn("username");
+	     statusCriteria2.setOperator("=");
+	     statusCriteria2.setValue("guru");
+	     conditions.add(statusCriteria2);
+	     
+	     UserDAO userDAO = new UserDAOImp();
+	     List<User> activeCustomers;
 			try {
 				activeCustomers = userDAO.getUser(new ArrayList<String>(Arrays.asList("*")), conditions);
 	            System.out.println("Active Customers: " + activeCustomers);
 			} catch (CustomException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-//        } catch (CustomException e) {
-//            System.out.print("Exception thrown while retrieving active customers: " + e.getMessage());
-//        }
     }
 
 }

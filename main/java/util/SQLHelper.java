@@ -11,10 +11,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import dblayer.connect.DBConnection;
 import dblayer.model.ColumnCriteria;
 import dblayer.model.Criteria;
+import util.ColumnYamlUtil.ClassMapping;
+import util.TableYamlUtil.ColumnMapping;
+import util.ColumnYamlUtil.FieldMapping;
+import util.TableYamlUtil.TableMapping;
 
 public class SQLHelper {
 	
@@ -24,12 +27,14 @@ public class SQLHelper {
         	T instance = type.getDeclaredConstructor().newInstance();
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
-            Map<String, String> map = YamlUtil.getMapping(tableName);
+            TableMapping tableMapping = TableYamlUtil.getMapping(tableName);
+            Map<String, ColumnMapping> columnMap = tableMapping.getFields();
             for (int i = 1; i <= columnCount; i++) {
                 String columnName = metaData.getColumnName(i);
                 Object columnValue = resultSet.getObject(i);
                 try {
-                    Field field = type.getDeclaredField(map.get(columnName));
+                	ColumnMapping fieldMapping = columnMap.get(columnName);
+                    Field field = type.getDeclaredField(fieldMapping.getColumnName());
                     field.setAccessible(true);
                     field.set(instance, columnValue);
                 } catch (NoSuchFieldException e) {
@@ -228,8 +233,8 @@ public class SQLHelper {
 	public static void insert(String table, Object pojo) throws CustomException {
 	    Helper.checkNullValues(table);
 	    Helper.checkNullValues(pojo);
-	    Map<String, String> map = YamlUtil.getMapping(table);
-	    Map<String, String> fieldToColumnMap = map.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+	    ClassMapping tableMapping = ColumnYamlUtil.getMapping(table);
+        Map<String, FieldMapping> columnMap = tableMapping.getFields();
 	    
 	    Class<?> clazz = pojo.getClass();
 	    Field[] fields = clazz.getDeclaredFields();
@@ -243,7 +248,8 @@ public class SQLHelper {
 	    	}
 	        field.setAccessible(true); 
 	        try {
-	        	insertSql.append(fieldToColumnMap.get(field.getName()));
+	        	FieldMapping fieldMapping = columnMap.get(field.getName());
+	        	insertSql.append(fieldMapping.getColumnName());
 	        	if (i < length - 1) {
 		            insertSql.append(", ");
 		        }

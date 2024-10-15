@@ -1,0 +1,209 @@
+classes:
+  Branch:
+    tableName: "branch"
+    fields:
+      id:
+        columnName: "id"
+        type: "Long"
+      ifscCode:
+        columnName: "ifsc_code"
+        type: "String"
+      contactNumber:
+        columnName: "contact_number"
+        type: "String"
+      name:
+        columnName: "name"
+        type: "String"
+      address:
+        columnName: "address"
+        type: "String"
+      createdAt:
+        columnName: "created_at"
+        type: "Date"
+      modifiedAt:
+        columnName: "modified_at"
+        type: "Date"
+      performedBy:
+        columnName: "performed_by"
+        type: "String"
+
+  User:
+    tableName: "user"
+    fields:
+      id:
+        columnName: "id"
+        type: "Long"
+      fullname:
+        columnName: "fullname"
+        type: "String"
+      email:
+        columnName: "email"
+        type: "String"
+      phone:
+        columnName: "phone"
+        type: "String"
+      role:
+        columnName: "role"
+        type: "String"
+      username:
+        columnName: "username"
+        type: "String"
+      password:
+        columnName: "password"
+        type: "String"
+      status:
+        columnName: "status"
+        type: "String"
+      createdAt:
+        columnName: "created_at"
+        type: "Date"
+      modifiedAt:
+        columnName: "modified_at"
+        type: "Date"
+
+  Customer:
+    tableName: "customer"
+    fields:
+      user_id:
+        columnName: "userID"
+        type: "Long"
+      pan_number:
+        columnName: "pan_number"
+        type: "String"
+      aadhar_number:
+        columnName: "aadhar_number"
+        type: "String"
+      createdAt:
+        columnName: "created_at"
+        type: "Date"
+      modifiedAt:
+        columnName: "modified_at"
+        type: "Date"
+      performed_by:
+        columnName: "performed_by"
+        type: "String"
+
+  CustomerDetail:
+    tableName: "customerDetail"
+    fields:
+      user_id:
+        columnName: "userID"
+        type: "Long"
+      dob:
+        columnName: "dob"
+        type: "Date"
+      father_name:
+        columnName: "father_name"
+        type: "String"
+      mother_name:
+        columnName: "mother_name"
+        type: "String"
+      address:
+        columnName: "address"
+        type: "String"
+      marital_status:
+        columnName: "marital_status"
+        type: "String"
+
+  Nominee:
+    tableName: "nominee"
+    fields:
+      user_id:
+        columnName: "userID"
+        type: "Long"
+      name:
+        columnName: "name"
+        type: "String"
+      relationship:
+        columnName: "relationship"
+        type: "String"
+
+  Account:
+    tableName: "account"
+    fields:
+      account_number:
+        columnName: "accountNumber"
+        type: "String"
+      branch_id:
+        columnName: "branchId"
+        type: "Long"
+      customer_id:
+        columnName: "customerId"
+        type: "Long"
+      account_type:
+        columnName: "accountType"
+        type: "String"
+      status:
+        columnName: "status"
+        type: "String"
+      balance:
+        columnName: "balance"
+        type: "Double"
+      min_balance:
+        columnName: "minBalance"
+        type: "Double"
+      createdAt:
+        columnName: "created_at"
+        type: "Date"
+      modifiedAt:
+        columnName: "modified_at"
+        type: "Date"
+      performed_by:
+        columnName: "performed_by"
+        type: "String"
+
+  Staff:
+    tableName: "staff"
+    fields:
+      user_id:
+        columnName: "userID"
+        type: "Long"
+      branch_id:
+        columnName: "branchID"
+        type: "Long"
+      createdAt:
+        columnName: "created_at"
+        type: "Date"
+      modifiedAt:
+        columnName: "modified_at"
+        type: "Date"
+      performed_by:
+        columnName: "performed_by"
+        type: "String"
+
+  Transaction:
+    tableName: "transaction"
+    fields:
+      id:
+        columnName: "id"
+        type: "Long"
+      customer_id:
+        columnName: "customerID"
+        type: "Long"
+      account_number:
+        columnName: "accountNumber"
+        type: "String"
+      transaction_account_number:
+        columnName: "transactionAccountNumber"
+        type: "String"
+      transaction_type:
+        columnName: "transactionType"
+        type: "String"
+      status:
+        columnName: "status"
+        type: "String"
+      remarks:
+        columnName: "remarks"
+        type: "String"
+      amount:
+        columnName: "amount"
+        type: "Double"
+      closing_balance:
+        columnName: "closingBalance"
+        type: "Double"
+      transaction_time:
+        columnName: "transactionTime"
+        type: "Timestamp"
+      performed_by:
+        columnName: "performed_by"
+        type: "String"

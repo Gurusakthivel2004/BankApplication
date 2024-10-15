@@ -1,6 +1,6 @@
 package dblayer.model;
 
-public class Staff {
+public class Staff extends User {
 	
 	private Long userID;
     private Long branchID;

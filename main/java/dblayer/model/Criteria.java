@@ -4,6 +4,7 @@ import java.util.List;
 
 public class Criteria {
 	
+	private String tableName;
     private String column;
     private Object value;
     private String operator;
@@ -12,7 +13,15 @@ public class Criteria {
     private String joinTable; 
     private Criteria joinCondition;
     private String orderBy; 
+    
+    public String getTableName() {
+        return tableName;
+    }
 
+    public void setTableName(String column) {
+        this.column = column;
+    }
+    
     public String getColumn() {
         return column;
     }

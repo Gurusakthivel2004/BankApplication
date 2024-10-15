@@ -1,6 +1,6 @@
 package dblayer.model;
 
-public class CustomerDetail {
+public class CustomerDetail extends Customer {
 	
     private Long userID;
     private String dob;

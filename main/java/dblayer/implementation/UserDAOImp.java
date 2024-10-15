@@ -12,7 +12,7 @@ public class UserDAOImp implements UserDAO {
 
 	@Override
 	public void insertUser(User obj) throws CustomException {
-		SQLHelper.insert("user", obj);
+//		SQLHelper.insert("user", obj);
 	}
 
 	@Override

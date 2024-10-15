@@ -22,7 +22,7 @@ import dblayer.implementation.CrudDAOImp;
 import util.CustomException;
 import util.Helper;
 import util.SQLHelper;
-import util.YamlUtil;
+import util.TableYamlUtil;
 
 public class DBRunner {
 	public static void main(String[] args) {
