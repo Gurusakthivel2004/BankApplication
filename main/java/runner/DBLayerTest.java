@@ -8,6 +8,8 @@ import dblayer.dao.UserDAO;
 import dblayer.implementation.UserDAOImp;
 import dblayer.model.ColumnCriteria;
 import dblayer.model.Criteria;
+import dblayer.model.Customer;
+import dblayer.model.CustomerDetail;
 import dblayer.model.User;
 import util.CustomException;
 import util.SQLHelper;
@@ -16,7 +18,11 @@ public class DBLayerTest {
 
 	public static void main(String[] args) {
 		DBLayerTest dbLayerTest = new DBLayerTest();
-		dbLayerTest.testGetActiveCustomers();
+		try {
+			dbLayerTest.insertTest();
+		} catch (CustomException e) {
+			e.printStackTrace();
+		}
 //		List<Criteria> conditions = new ArrayList<>();
 //
 //		// Criteria for INNER JOIN
@@ -49,32 +55,65 @@ public class DBLayerTest {
 //      }
 	}
 	
-    void testGetActiveCustomers() {
-		 List<Criteria> conditions = new ArrayList<>();
-	     Criteria statusCriteria = new Criteria();
-	     statusCriteria.setColumn("id");
-	     statusCriteria.setOperator("=");
-	     statusCriteria.setValue(3l);
-	     conditions.add(statusCriteria);
-	     
-	     Criteria statusCriteria3 = new Criteria();
-	     statusCriteria3.setOperator("OR");
-	     conditions.add(statusCriteria3);
-	     
-	     Criteria statusCriteria2 = new Criteria();
-	     statusCriteria2.setColumn("username");
-	     statusCriteria2.setOperator("=");
-	     statusCriteria2.setValue("guru");
-	     conditions.add(statusCriteria2);
-	     
-	     UserDAO userDAO = new UserDAOImp();
-	     List<User> activeCustomers;
-			try {
-				activeCustomers = userDAO.getUser(new ArrayList<String>(Arrays.asList("*")), conditions);
-	            System.out.println("Active Customers: " + activeCustomers);
-			} catch (CustomException e) {
-				e.printStackTrace();
-			}
+	public static void insertTest() throws CustomException {
+		Customer customer = new Customer(
+			    "Lionel messi", // fullname
+			    "messi@gmail.com", // email
+			    1234567890L, // phone
+			    "Customer", // role
+			    "leo_messi", // username
+			    "hashed_password", // password (assumed to be hashed)
+			    "Active", // status
+			    System.currentTimeMillis(), // createdAt (current timestamp)
+			    null, // modifiedAt (assuming it's null for now)
+			    "PAN123456789", // panNumber
+			    987654321012L, // aadharNumber
+			    2L // performedBy (assuming it's the same user who created the record)
+		);
+		SQLHelper.insert(customer);
+
+	}
+	
+	public static void testMapResultSet() throws CustomException {
+		List<Criteria> conditions = new ArrayList<>();
+		Criteria customerJoinCriteria = new Criteria();
+        customerJoinCriteria.setColumn("user_id");
+        customerJoinCriteria.setOperator("=");
+        customerJoinCriteria.setValue(3l);
+        conditions.add(customerJoinCriteria);
+        List<Customer> customers = SQLHelper.get("customer", Customer.class, new ArrayList<> (Arrays.asList("*")), conditions);
+        System.out.println(customers);
+	}
+	
+//	SELECT user.*, customer.*, customerDetail.*
+//	FROM user
+//	JOIN customer ON user.id = customer.user_id
+//	WHERE condition;
+
+//	SELECT user.*, customer.*, customerDetail.*
+//	FROM user
+//	JOIN customer ON user.id = customer.user_id 
+//	WHERE user_id = ?
+
+    private static void testJoinAndWhereCondition() throws CustomException {
+        List<Criteria> conditions = new ArrayList<>();
+
+        Criteria customerJoinCriteria = new Criteria();
+        Criteria joinCriteria = new Criteria();
+        joinCriteria.setColumn("user.id");
+        joinCriteria.setTableName("user");
+        joinCriteria.setOperator("=");
+        joinCriteria.setValue("customer.user_id");
+        customerJoinCriteria.setJoinType(" JOIN ");
+        customerJoinCriteria.setJoinCriteria(joinCriteria);
+        customerJoinCriteria.setColumn("user_id");
+        customerJoinCriteria.setOperator("=");
+        customerJoinCriteria.setValue(3l);
+        conditions.add(customerJoinCriteria);
+        
+        List<Customer> customers = SQLHelper.get("customer", Customer.class, new ArrayList<> (Arrays.asList("user.*", "customer.*")), conditions);
+        System.out.println(customers);
     }
+
 
 }

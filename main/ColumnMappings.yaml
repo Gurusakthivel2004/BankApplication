@@ -1,5 +1,5 @@
 classes:
-  Branch:
+  dblayer.model.Branch:
     tableName: "branch"
     fields:
       id:
@@ -25,10 +25,11 @@ classes:
         type: "Date"
       performedBy:
         columnName: "performed_by"
-        type: "String"
+        type: "Long"
 
-  User:
+  dblayer.model.User:
     tableName: "user"
+    autoIncrementField: "id"
     fields:
       id:
         columnName: "id"
@@ -56,82 +57,65 @@ classes:
         type: "String"
       createdAt:
         columnName: "created_at"
-        type: "Date"
+        type: "Long"
       modifiedAt:
         columnName: "modified_at"
-        type: "Date"
-
-  Customer:
-    tableName: "customer"
-    fields:
-      user_id:
-        columnName: "userID"
         type: "Long"
-      pan_number:
+      performedBy:
+        columnName: "performed_by"
+        type: "Long"
+
+  dblayer.model.Customer:
+    tableName: "customer"
+    referenceField: "userId"
+    fields:
+      userId:
+        columnName: "user_id"
+        type: "Long"
+      panNumber:
         columnName: "pan_number"
         type: "String"
-      aadhar_number:
+      aadharNumber:
         columnName: "aadhar_number"
         type: "String"
-      createdAt:
-        columnName: "created_at"
-        type: "Date"
-      modifiedAt:
-        columnName: "modified_at"
-        type: "Date"
-      performed_by:
-        columnName: "performed_by"
-        type: "String"
 
-  CustomerDetail:
+  dblayer.model.CustomerDetail:
     tableName: "customerDetail"
+    referenceField: "customerId"
     fields:
-      user_id:
-        columnName: "userID"
+      customerId:
+        columnName: "user_id"
         type: "Long"
       dob:
         columnName: "dob"
         type: "Date"
-      father_name:
+      fatherName:
         columnName: "father_name"
         type: "String"
-      mother_name:
+      motherName:
         columnName: "mother_name"
         type: "String"
       address:
         columnName: "address"
         type: "String"
-      marital_status:
+      maritalStatus:
         columnName: "marital_status"
         type: "String"
 
-  Nominee:
-    tableName: "nominee"
-    fields:
-      user_id:
-        columnName: "userID"
-        type: "Long"
-      name:
-        columnName: "name"
-        type: "String"
-      relationship:
-        columnName: "relationship"
-        type: "String"
-
-  Account:
+  dblayer.model.Account:
     tableName: "account"
     fields:
       account_number:
         columnName: "accountNumber"
         type: "String"
-      branch_id:
-        columnName: "branchId"
+      branchId:
+        columnName: "branch_id"
         type: "Long"
-      customer_id:
-        columnName: "customerId"
+      customerId:
+        columnName: "customer_id"
         type: "Long"
-      account_type:
-        columnName: "accountType"
+      accountType:
+        columnName: "account_type"
         type: "String"
       status:
         columnName: "status"
@@ -139,8 +123,8 @@ classes:
       balance:
         columnName: "balance"
         type: "Double"
-      min_balance:
-        columnName: "minBalance"
+      minBalance:
+        columnName: "min_balance"
         type: "Double"
       createdAt:
         columnName: "created_at"
@@ -152,42 +136,30 @@ classes:
         columnName: "performed_by"
         type: "String"
 
-  Staff:
+  dblayer.model.Staff:
     tableName: "staff"
     fields:
-      user_id:
-        columnName: "userID"
+      branchId:
+        columnName: "branch_iD"
         type: "Long"
-      branch_id:
-        columnName: "branchID"
-        type: "Long"
-      createdAt:
-        columnName: "created_at"
-        type: "Date"
-      modifiedAt:
-        columnName: "modified_at"
-        type: "Date"
-      performed_by:
-        columnName: "performed_by"
-        type: "String"
 
-  Transaction:
+  dblayer.model.Transaction:
     tableName: "transaction"
     fields:
       id:
         columnName: "id"
         type: "Long"
-      customer_id:
-        columnName: "customerID"
+      customerId:
+        columnName: "customer_id"
         type: "Long"
-      account_number:
-        columnName: "accountNumber"
+      accountNumber:
+        columnName: "account_number"
         type: "String"
-      transaction_account_number:
-        columnName: "transactionAccountNumber"
+      transactionAccountNumber:
+        columnName: "transaction_account_number"
         type: "String"
-      transaction_type:
-        columnName: "transactionType"
+      transactionType:
+        columnName: "transaction_type"
         type: "String"
       status:
         columnName: "status"
@@ -198,12 +170,12 @@ classes:
       amount:
         columnName: "amount"
         type: "Double"
-      closing_balance:
-        columnName: "closingBalance"
+      closingBalance:
+        columnName: "closing_balance"
         type: "Double"
-      transaction_time:
-        columnName: "transactionTime"
+      transactionTime:
+        columnName: "transaction_time"
         type: "Timestamp"
-      performed_by:
+      performedBy:
         columnName: "performed_by"
         type: "String"

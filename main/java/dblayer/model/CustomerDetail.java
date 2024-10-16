@@ -2,22 +2,27 @@ package dblayer.model;
 
 public class CustomerDetail extends Customer {
 	
-    private Long userID;
+	private Long customerId;
     private String dob;
     private String fatherName;
-    private String motherName;
+
+	public CustomerDetail(String fullname, String email, Long phone, String role, String username,
+			String password, String status, Long createdAt, Long modifiedAt, String panNumber, Long aadharNumber,
+			Long performedBy, String dob, String fatherName, String motherName, String address, String maritalStatus) {
+		super(fullname, email, phone, role, username, password, status, createdAt, modifiedAt, panNumber,
+				aadharNumber, performedBy);
+		this.dob = dob;
+		this.fatherName = fatherName;
+		this.motherName = motherName;
+		this.address = address;
+		this.maritalStatus = maritalStatus;
+	}
+
+	private String motherName;
     private String address;
     private String maritalStatus;
     
     public CustomerDetail() {}
-
-	public Long getUserID() {
-		return userID;
-	}
-
-	public void setUserID(Long userID) {
-		this.userID = userID;
-	}
 
 	public String getDob() {
 		return dob;
@@ -61,8 +66,16 @@ public class CustomerDetail extends Customer {
 
 	@Override
 	public String toString() {
-		return "CustomerDetail [userID=" + userID + ", dob=" + dob + ", fatherName=" + fatherName + ", motherName="
+		return "CustomerDetail [id=" + getId() + ", dob=" + dob + ", fatherName=" + fatherName + ", motherName="
 				+ motherName + ", address=" + address + ", maritalStatus=" + maritalStatus + "]";
+	}
+
+	public Long getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
 	}
     
 }

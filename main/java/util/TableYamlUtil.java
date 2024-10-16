@@ -65,6 +65,9 @@ public class TableYamlUtil {
 
     public static class TableMapping {
         private String className;
+        private String primaryKey;
+        private String referenceKey;
+        private Map<String, String> referencedKeys;
         private Map<String, ColumnMapping> fields;
 
         public String getClassName() {
@@ -82,6 +85,30 @@ public class TableYamlUtil {
         public void setFields(Map<String, ColumnMapping> fields) {
             this.fields = fields;
         }
+
+		public String getPrimaryKey() {
+			return primaryKey;
+		}
+
+		public void setPrimaryKey(String primaryKey) {
+			this.primaryKey = primaryKey;
+		}
+
+		public Map<String, String> getReferencedKeys() {
+			return referencedKeys;
+		}
+
+		public void setReferencedKeys(Map<String, String> referencedKeys) {
+			this.referencedKeys = referencedKeys;
+		}
+
+		public String getReferenceKey() {
+			return referenceKey;
+		}
+
+		public void setReferenceKey(String referenceKey) {
+			this.referenceKey = referenceKey;
+		}
     }
 
     public static class ColumnMapping {

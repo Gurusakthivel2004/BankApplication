@@ -2,7 +2,7 @@ package dblayer.model;
 
 import java.math.BigDecimal;
 
-public class Transaction {
+public class Transaction implements Bank {
 	
 	public enum TransactionType {
 	    CREDIT,

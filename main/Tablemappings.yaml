@@ -29,6 +29,8 @@ tables:
 
   user:
     className: "dblayer.model.User"
+    primaryKey: "id"
+    referenceKey: "id"
     columns:
       id:
         fieldName: "id"
@@ -60,35 +62,29 @@ tables:
       modified_at:
         fieldName: "modifiedAt"
         type: "Date"
+      performed_by:
+        fieldName: "performedBy"
+        type: "String"
 
   customer:
     className: "dblayer.model.Customer"
+    primaryKey: "user_id"
+    referencedKeys:
+      "user_id": "id"
     columns:
-      user_id:
-        fieldName: "userID"
-        type: "Long"
       pan_number:
         fieldName: "panNumber"
         type: "String"
       aadhar_number:
         fieldName: "aadharNumber"
         type: "String"
-      created_at:
-        fieldName: "createdAt"
-        type: "Date"
-      modified_at:
-        fieldName: "modifiedAt"
-        type: "Date"
-      performed_by:
-        fieldName: "performedBy"
-        type: "String"
 
   customerDetail:
     className: "dblayer.model.CustomerDetail"
+    primaryKey: "user_id"
+    referencedKeys:
+      "user_id": "id"
     columns:
-      user_id:
-        fieldName: "userID"
-        type: "Long"
       dob:
         fieldName: "dob"
         type: "Date"
@@ -103,19 +99,6 @@ tables:
         type: "String"
       marital_status:
         fieldName: "maritalStatus"
-        type: "String"
-
-  nominee:
-    className: "dblayer.model.Nominee"
-    columns:
-      user_id:
-        fieldName: "userID"
-        type: "Long"
-      name:
-        fieldName: "name"
-        type: "String"
-      relationship:
-        fieldName: "relationship"
         type: "String"
 
   account:
@@ -155,21 +138,9 @@ tables:
   staff:
     className: "dblayer.model.Staff"
     columns:
-      user_id:
-        fieldName: "userID"
-        type: "Long"
       branch_id:
         fieldName: "branchID"
         type: "Long"
-      created_at:
-        fieldName: "createdAt"
-        type: "Date"
-      modified_at:
-        fieldName: "modifiedAt"
-        type: "Date"
-      performed_by:
-        fieldName: "performedBy"
-        type: "String"
 
   transaction:
     className: "dblayer.model.Transaction"

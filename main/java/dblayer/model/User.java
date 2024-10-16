@@ -1,8 +1,8 @@
 package dblayer.model;
 
-public class User {
-	
-    private Long id;
+public class User implements Bank{
+
+	private Long id;
     private String fullname;
     private String email;
     private Long phone;
@@ -12,6 +12,24 @@ public class User {
     private String status;
     private Long createdAt;
     private Long modifiedAt;
+    private Long performedBy;
+    
+    public User(String fullname, String email, Long phone, String role, String username, String password,
+			String status, Long createdAt, Long modifiedAt, Long performedBy) {
+		super();
+		this.fullname = fullname;
+		this.email = email;
+		this.phone = phone;
+		this.role = role;
+		this.username = username;
+		this.password = password;
+		this.status = status;
+		this.createdAt = createdAt;
+		this.modifiedAt = modifiedAt;
+		this.performedBy = performedBy;
+	}
+    
+    public User() {}
 
     public Long getId() {
         return id;
@@ -93,6 +111,14 @@ public class User {
         this.modifiedAt = millis;
     }
     
+	public Long getPerformedBy() {
+		return performedBy;
+	}
+
+	public void setPerformedBy(Long performedBy) {
+		this.performedBy = performedBy;
+	}
+    
     @Override
     public String toString() {
         return "User{" +
@@ -106,6 +132,7 @@ public class User {
                 ", status='" + status + '\'' +
                 ", createdAt=" + createdAt +
                 ", modifiedAt=" + modifiedAt +
+                ", performedBy=" + performedBy +
                 '}';
     }
 }

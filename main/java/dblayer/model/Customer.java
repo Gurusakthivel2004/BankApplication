@@ -1,25 +1,25 @@
 package dblayer.model;
 
-import java.util.List;
-
 public class Customer extends User {
 	
-    private Long userID;
+	private Long userId;
     private String panNumber;
     private Long aadharNumber;
-    private Long createdAt;
-    private Long modifiedAt;
-    private Long performedBy;
+	
+    public Customer(String fullname, String email, Long phone, String role, String username, String password,
+			String status, Long createdAt, Long modifiedAt, String panNumber, Long aadharNumber, Long performedBy) {
+		super(fullname, email, phone, role, username, password, status, createdAt, modifiedAt, performedBy);
+		this.panNumber = panNumber;
+		this.aadharNumber = aadharNumber;
+	}
+
+    public Customer(Long userID, String panNumber, Long aadharNumber) {
+		this.panNumber = panNumber;
+		this.aadharNumber = aadharNumber;
+    }
     
-    public Customer() {}
+	public Customer() {}
 
-	public Long getUserID() {
-		return userID;
-	}
-
-	public void setUserID(Long userID) {
-		this.userID = userID;
-	}
 
 	public String getPanNumber() {
 		return panNumber;
@@ -37,34 +37,17 @@ public class Customer extends User {
 		this.aadharNumber = aadharNumber;
 	}
 
-	public Long getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Long createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public Long getModifiedAt() {
-		return modifiedAt;
-	}
-
-	public void setModifiedAt(Long modifiedAt) {
-		this.modifiedAt = modifiedAt;
-	}
-
-	public Long getPerformedBy() {
-		return performedBy;
-	}
-
-	public void setPerformedBy(Long performedBy) {
-		this.performedBy = performedBy;
-	}
-
 	@Override
 	public String toString() {
-		return "Customer [userID=" + userID + ", panNumber=" + panNumber + ", aadharNumber=" + aadharNumber
-				+ ", createdAt=" + createdAt + ", modifiedAt=" + modifiedAt + ", performedBy=" + performedBy + "]";
+		return super.toString() + "Customer [id=" + getId() + ", panNumber=" + panNumber + ", aadharNumber=" + aadharNumber;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
     
 }

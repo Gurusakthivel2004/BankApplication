@@ -1,6 +1,6 @@
 package dblayer.model;
 
-public class ColumnCriteria {
+public class ColumnCriteria implements Bank {
 	
     private String column; 
     private Object value; 

@@ -2,7 +2,7 @@ package dblayer.model;
 
 import java.util.List;
 
-public class Criteria {
+public class Criteria implements Bank {
 	
 	private String tableName;
     private String column;
@@ -10,16 +10,15 @@ public class Criteria {
     private String operator;
     private List<Object> values;
     private String joinType; 
-    private String joinTable; 
-    private Criteria joinCondition;
+    private Criteria joinCriteria;
     private String orderBy; 
     
     public String getTableName() {
         return tableName;
     }
 
-    public void setTableName(String column) {
-        this.column = column;
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
     
     public String getColumn() {
@@ -62,22 +61,6 @@ public class Criteria {
         this.joinType = joinType;
     }
 
-    public String getJoinTable() {
-        return joinTable;
-    }
-
-    public void setJoinTable(String joinTable) {
-        this.joinTable = joinTable;
-    }
-
-    public Criteria getJoinCondition() {
-        return joinCondition;
-    }
-
-    public void setJoinCondition(Criteria joinCondition) {
-        this.joinCondition = joinCondition;
-    }
-
     public String getOrderBy() {
         return orderBy;
     }
@@ -85,4 +68,12 @@ public class Criteria {
     public void setOrderBy(String orderBy) {
         this.orderBy = orderBy;
     }
+
+	public Criteria getJoinCriteria() {
+		return joinCriteria;
+	}
+
+	public void setJoinCriteria(Criteria joinCriteria) {
+		this.joinCriteria = joinCriteria;
+	}
 }

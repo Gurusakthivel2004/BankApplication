@@ -29,6 +29,8 @@ public class ColumnYamlUtil {
 
                 ClassMapping tableMapping = new ClassMapping();
                 tableMapping.setTableName((String) tableMappingData.get("tableName"));
+                tableMapping.setAutoIncrementField((String) tableMappingData.get("autoIncrementField"));
+                tableMapping.setReferenceField((String) tableMappingData.get("referenceField"));
 
                 Map<String, FieldMapping> fields = new HashMap<>();
                 Map<String, Object> fieldsData = (Map<String, Object>) tableMappingData.get("fields");
@@ -54,17 +56,19 @@ public class ColumnYamlUtil {
         }
     }
 
-    public static ClassMapping getMapping(String tableName) {
-    	ClassMapping mapping = mappings.get(tableName);
+    public static ClassMapping getMapping(String className) {
+    	ClassMapping mapping = mappings.get(className);
         if (mapping != null) {
             return mapping;
         } else {
-            throw new IllegalArgumentException("Mapping for table '" + tableName + "' not found in YAML.");
+            throw new IllegalArgumentException("Mapping for table '" + className + "' not found in YAML.");
         }
     }
 
     public static class ClassMapping {
         private String tableName;
+        private String referenceField;
+        private String autoIncrementField;
         private Map<String, FieldMapping> fields;
 
         public String getTableName() {
@@ -82,6 +86,22 @@ public class ColumnYamlUtil {
         public void setFields(Map<String, FieldMapping> fields) {
             this.fields = fields;
         }
+
+		public String getAutoIncrementField() {
+			return autoIncrementField;
+		}
+
+		public void setAutoIncrementField(String autoIncrementField) {
+			this.autoIncrementField = autoIncrementField;
+		}
+
+		public String getReferenceField() {
+			return referenceField;
+		}
+
+		public void setReferenceField(String referenceField) {
+			this.referenceField = referenceField;
+		}
     }
 
     public static class FieldMapping {

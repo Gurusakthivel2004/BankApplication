@@ -1,6 +1,6 @@
 package dblayer.model;
 
-public class Branch {
+public class Branch implements Bank {
 
 	private Long id;
     private String ifscCode;
