@@ -1,6 +1,7 @@
 classes:
   dblayer.model.Branch:
     tableName: "branch"
+    autoIncrementField: "id"
     fields:
       id:
         columnName: "id"

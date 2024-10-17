@@ -29,8 +29,6 @@ tables:
 
   user:
     className: "dblayer.model.User"
-    primaryKey: "id"
-    referenceKey: "id"
     columns:
       id:
         fieldName: "id"
@@ -68,10 +66,10 @@ tables:
 
   customer:
     className: "dblayer.model.Customer"
-    primaryKey: "user_id"
-    referencedKeys:
-      "user_id": "id"
     columns:
+      user_id:
+        fieldName: "userId"
+        type: "Long"
       pan_number:
         fieldName: "panNumber"
         type: "String"
@@ -81,10 +79,10 @@ tables:
 
   customerDetail:
     className: "dblayer.model.CustomerDetail"
-    primaryKey: "user_id"
-    referencedKeys:
-      "user_id": "id"
     columns:
+      customer_id:
+        fieldName: "customerId"
+        type: "Long"
       dob:
         fieldName: "dob"
         type: "Date"

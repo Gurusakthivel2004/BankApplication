@@ -2,6 +2,8 @@ package dblayer.model;
 
 public class ColumnCriteria implements Bank {
 	
+	// column: field of the pojo class to be updated.
+	// value: value of the field.
     private String column; 
     private Object value; 
     

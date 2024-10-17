@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dblayer.dao.UserDAO;
-import dblayer.implementation.UserDAOImp;
 import dblayer.model.ColumnCriteria;
 import dblayer.model.Criteria;
 import dblayer.model.User;
@@ -17,7 +15,6 @@ import org.mindrot.jbcrypt.BCrypt;
 public class Helper {
 	
     private static ThreadLocal<Long> threadLocal = ThreadLocal.withInitial(() -> 0l);
-    private static UserDAO userDAO = new UserDAOImp();
     
     public static Long get() {
     	return threadLocal.get();
@@ -41,36 +38,36 @@ public class Helper {
 	   }
 	}
     
-    public static void checkRole(long userID, String role) throws CustomException {
-    	ColumnCriteria columnCriteria = new ColumnCriteria();
-    	columnCriteria.setColumn("role");
-    	Criteria criteria = new Criteria();
-    	criteria.setColumn("id");
-    	criteria.setOperator("=");
-    	criteria.setValue(userID);
-    	List<User> rows = userDAO.getUser(new ArrayList<ColumnCriteria>(Arrays.asList(columnCriteria)), 
-    			new ArrayList<Criteria>(Arrays.asList(criteria)));
-    	if(rows.size() == 0) {
-    		throw new CustomException("User doesn't exists.");
-    	} else if(!rows.get(0).getRole().equals(role)) {
-    		throw new CustomException("User role mismatch.");
-    	}
-    }
-    
-    public static boolean checkUserPassword(String username, String password) throws CustomException {
-    	ColumnCriteria columnCriteria = new ColumnCriteria();
-    	columnCriteria.setColumn("password");
-    	Criteria criteria = new Criteria();
-    	criteria.setColumn("username");
-    	criteria.setOperator("=");
-    	criteria.setValue(username);
-    	List<User> rows = userDAO.getUser(new ArrayList<ColumnCriteria>(Arrays.asList(columnCriteria)), 
-    			new ArrayList<Criteria>(Arrays.asList(criteria)));
-    	if(rows.size() == 0) {
-    		throw new CustomException("No user exists with the username");
-    	}
-    	return Helper.checkPassword(password, rows.get(0).getPassword());
-    }
+//    public static void checkRole(long userID, String role) throws CustomException {
+//    	ColumnCriteria columnCriteria = new ColumnCriteria();
+//    	columnCriteria.setColumn("role");
+//    	Criteria criteria = new Criteria();
+//    	criteria.setColumn("id");
+//    	criteria.setOperator("=");
+//    	criteria.setValue(userID);
+//    	List<User> rows = userDAO.getUser(new ArrayList<ColumnCriteria>(Arrays.asList(columnCriteria)), 
+//    			new ArrayList<Criteria>(Arrays.asList(criteria)));
+//    	if(rows.size() == 0) {
+//    		throw new CustomException("User doesn't exists.");
+//    	} else if(!rows.get(0).getRole().equals(role)) {
+//    		throw new CustomException("User role mismatch.");
+//    	}
+//    }
+//    
+//    public static boolean checkUserPassword(String username, String password) throws CustomException {
+//    	ColumnCriteria columnCriteria = new ColumnCriteria();
+//    	columnCriteria.setColumn("password");
+//    	Criteria criteria = new Criteria();
+//    	criteria.setColumn("username");
+//    	criteria.setOperator("=");
+//    	criteria.setValue(username);
+//    	List<User> rows = userDAO.getUser(new ArrayList<ColumnCriteria>(Arrays.asList(columnCriteria)), 
+//    			new ArrayList<Criteria>(Arrays.asList(criteria)));
+//    	if(rows.size() == 0) {
+//    		throw new CustomException("No user exists with the username");
+//    	}
+//    	return Helper.checkPassword(password, rows.get(0).getPassword());
+//    }
 	
 	public static void checkNumber(String number) throws CustomException {
 		checkNullValues(number);

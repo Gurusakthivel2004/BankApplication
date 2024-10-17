@@ -11,10 +11,10 @@ public interface CrudDAO {
 	
 	<T> void insert(T obj) throws CustomException;
     
-	<T>  List<T> getBranch(List<String> columns, List<Criteria> conditions) throws CustomException;
+	<T> List<T> get(Criteria<T> conditions) throws CustomException;
     
-    void updateBranch(List<ColumnCriteria> columnCriteriaList, List<Criteria> conditions) throws CustomException;
+	<T> void update(List<ColumnCriteria> columnCriteriaList, Criteria<T> conditions) throws CustomException;
     
-    void deleteBranch(List<Criteria> conditions) throws CustomException;
+	<T> void delete(Criteria<T> conditions) throws CustomException;
     
 }

@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ import util.TableYamlUtil.TableMapping;
 public class SQLHelper {
 	
 	// map the column name to field name of the pojo class
+	@SuppressWarnings("unchecked")
 	private static <T> T mapResultSetToObject(ResultSet resultSet, Class<? extends T> clazz, T instance, String tableName) throws CustomException {
 		try {
             if(instance == null) {
@@ -51,7 +53,7 @@ public class SQLHelper {
                 	throw new CustomException(e.getMessage());
                 }
             }
-            
+          
             Class<?> superclass = clazz.getSuperclass();
             if (superclass != null && !superclass.getName().equals("java.lang.Object")) {
             	ClassMapping classMapping = ColumnYamlUtil.getMapping(superclass.getName());
@@ -98,84 +100,87 @@ public class SQLHelper {
 	// sql : sql string to be appended.
 	// conditions : It contains the criteria that has to be included in that query (WHERE clause).
 	// conditionValues : It contains the values of the placeholder(?) in the query.
-	public static void QueryBuilder(StringBuilder sql, List<Criteria> conditions, List<Object> conditionValues) throws CustomException {
-	    for (Criteria condition : conditions) {
-	    	if(condition == null) {
-	    		throw new CustomException("Condition cannot be null");
-	    	}
-	        if (condition.getJoinType() != null && condition.getJoinCriteria() != null) {
-	            sql.append(condition.getJoinType())
-	               .append(condition.getJoinCriteria().getTableName())
-	               .append(" ON ")
-	               .append(condition.getJoinCriteria().getColumn())
-	               .append(" "+condition.getJoinCriteria().getOperator() + " ")
-	               .append(condition.getJoinCriteria().getValue());
-	        }
-            sql.append(" WHERE ");
-	        if(condition.getColumn() != null) {
-	        	sql.append(condition.getColumn()).append(" ");
-	        } if(condition.getOperator() != null) {
-		        switch (condition.getOperator().toUpperCase()) {
-		            case "IN":
-		                sql.append("IN (");
-		                for (int j = 0; j < condition.getValues().size(); j++) {
-		                    sql.append("?");
-		                    conditionValues.add(condition.getValues().get(j));
-		                    if (j < condition.getValues().size() - 1) {
-		                        sql.append(", ");
-		                    }
-		                }
-		                sql.append(")");
-		                break;
-	
-		            case "BETWEEN":
-		                if (condition.getValues().size() == 2) {
-		                    sql.append("BETWEEN ? AND ?");
-		                    conditionValues.addAll(condition.getValues());
-		                }
-		                break;
-	
-		            case "LIKE":
-		                sql.append("LIKE ?");
-		                conditionValues.add(condition.getValue());
-		                break;
-	
-		            case "NOT":
-		                sql.append("NOT ");
-		                break;
+	public static <T> void QueryBuilder(StringBuilder sql, Criteria<T> condition, List<Object> conditionValues) throws CustomException {
+		if(condition == null) {
+    		throw new CustomException("Condition cannot be null");
+    	}
+        if (condition.getJoinType() != null && condition.getJoinCriteria() != null) {
+            sql.append(condition.getJoinType())
+               .append(condition.getJoinCriteria().getTableName())
+               .append(" ON ")
+               .append(condition.getJoinCriteria().getColumn())
+               .append(" "+condition.getJoinCriteria().getOperator() + " ")
+               .append(condition.getJoinCriteria().getValue());
+        }
+        sql.append(" WHERE ");
+        if(condition.getColumn() != null) {
+        	sql.append(condition.getColumn()).append(" ");
+        } if(condition.getOperator() != null) {
+	        switch (condition.getOperator().toUpperCase()) {
+	            case "IN":
+	                sql.append("IN (");
+	                for (int j = 0; j < condition.getValues().size(); j++) {
+	                    sql.append("?");
+	                    conditionValues.add(condition.getValues().get(j));
+	                    if (j < condition.getValues().size() - 1) {
+	                        sql.append(", ");
+	                    }
+	                }
+	                sql.append(")");
+	                break;
 
-		            case "=":
-		            case ">":
-		            case "<":
-		            case ">=":
-		            case "<=":
-		                sql.append(condition.getOperator()).append(" ?");
-		                conditionValues.add(condition.getValue());
-		                break;
-	
-		            case "AND":
-		            case "OR":
-		                sql.append(" ").append(condition.getOperator()).append(" ");
-		                break;
-	
-		            default:
-		                throw new IllegalArgumentException("Unsupported operator: " + condition.getOperator());
-		        }
+	            case "BETWEEN":
+	                if (condition.getValues().size() == 2) {
+	                    sql.append("BETWEEN ? AND ?");
+	                    conditionValues.addAll(condition.getValues());
+	                }
+	                break;
+
+	            case "LIKE":
+	                sql.append("LIKE ?");
+	                conditionValues.add(condition.getValue());
+	                break;
+
+	            case "NOT":
+	                sql.append("NOT ");
+	                break;
+
+	            case "=":
+	            case ">":
+	            case "<":
+	            case ">=":
+	            case "<=":
+	                sql.append(condition.getOperator()).append(" ?");
+	                conditionValues.add(condition.getValue());
+	                break;
+
+	            case "AND":
+	            case "OR":
+	                sql.append(" ").append(condition.getOperator()).append(" ");
+	                break;
+
+	            default:
+	                throw new IllegalArgumentException("Unsupported operator: " + condition.getOperator());
 	        }
-	        if (condition.getOrderBy() != null) {
-	            sql.append("ORDER BY ").append(condition.getOrderBy());
-	            break;
-	        }
-	    }
+        }
+        if (condition.getOrderBy() != null) {
+            sql.append("ORDER BY ").append(condition.getOrderBy());
+        }
 	}
 	
 	// @Update method
 	// table : name of the table.
 	// columnCriteriaList : it contains the column and value to be updated.
 	// conditions : It contains the criteria that has to be included in that query (WHERE clause).
-	public static void update(String table, List<ColumnCriteria> columnCriteriaList, List<Criteria> conditions) throws CustomException {
-	    Helper.checkNullValues(table);
+	@SuppressWarnings("unchecked")
+	public static <T> void update(List<ColumnCriteria> columnCriteriaList, Criteria<? extends T> conditions) throws CustomException {
+	    Helper.checkNullValues(conditions);
 	    Helper.checkNullValues(columnCriteriaList);
+	    Class<? extends T> clazz = (Class<? extends T>) conditions.getClazz();
+	    
+	    ClassMapping classMapping = ColumnYamlUtil.getMapping(conditions.getClazz().getName());
+	    Map<String, FieldMapping> fieldMap = classMapping.getFields();
+    	String table = classMapping.getTableName();
 	    if (columnCriteriaList.isEmpty()) {
 	        throw new IllegalArgumentException("No columns to update.");
 	    }
@@ -183,32 +188,40 @@ public class SQLHelper {
 	    List<Object> values = new ArrayList<>(); 
 	    for (int i = 0; i < columnCriteriaList.size(); i++) {
 	        ColumnCriteria criteria = columnCriteriaList.get(i);
-	        updateSql.append(criteria.getColumn()).append(" = ?");
-	        values.add(criteria.getValue()); 
-	        if (i < columnCriteriaList.size() - 1) {
-	            updateSql.append(", ");
+	        FieldMapping fieldMapping = fieldMap.get(criteria.getColumn());
+	        if(fieldMapping != null) {
+	        	updateSql.append(criteria.getColumn()).append(" = ?");
+		        values.add(criteria.getValue()); 
+		        if (i < columnCriteriaList.size() - 1) {
+		            updateSql.append(", ");
+		        }
 	        }
 	    }
-	    String query = updateSql.toString();
-	    Object[] valuesArray = values.toArray();
-	    if (conditions != null && !conditions.isEmpty()) {
-	        updateSql.append(" WHERE ");
+	    if(values.size() > 0) {
+		    String query = updateSql.toString();
+		    Object[] valuesArray = values.toArray();
 	        QueryBuilder(updateSql, conditions, values);
 	        query = table;
 	        valuesArray = null;
+//		    executeNonSelect(query, valuesArray);
 	    }
-	    executeNonSelect(query, valuesArray);
+	    Class<?> superclass = clazz.getSuperclass();
+        if (superclass != null && !superclass.getName().equals("java.lang.Object")) {
+        	conditions.setClazz(superclass);
+        	update(columnCriteriaList, conditions);
+        }
+        
 	}
 
 	// @Delete method
 	// table : name of the table.
 	// conditions : It contains the criteria that has to be included in that query (WHERE clause).
-	public static void delete(String table, List<Criteria> conditions) throws CustomException {
-	    Helper.checkNullValues(table);
+	public static <T> void delete(Criteria<T> conditions) throws CustomException {
 	    Helper.checkNullValues(conditions);
-	    if (conditions.isEmpty()) {
-	        throw new IllegalArgumentException("No criteria for deletion.");
-	    }
+	    @SuppressWarnings("unchecked")
+		Class<? extends T> clazz = (Class<? extends T>) conditions.getClazz();
+	    ClassMapping classMapping = ColumnYamlUtil.getMapping(conditions.getClazz().getName());
+    	String table = classMapping.getTableName();
 	    StringBuilder deleteSql = new StringBuilder("DELETE FROM ").append(table).append(" WHERE ");
 	    List<Object> values = new ArrayList<>();
 	    QueryBuilder(deleteSql, conditions, values);
@@ -220,10 +233,12 @@ public class SQLHelper {
 	// clazz : class of the pojo to be returned.
 	// columnCriteriaList : it contains the column and value to be updated.
 	// conditions : It contains the criteria that has to be included in that query (WHERE clause).
-	public static <T> List<T> get(String table, Class<T> clazz, List<String> selectColumns, List<Criteria> conditions) throws CustomException {
-        Helper.checkNullValues(table);
-        Helper.checkNullValues(selectColumns);
-        Helper.checkNullValues(clazz);
+	@SuppressWarnings("unchecked")
+	public static <T> List<T> get(Criteria<T> condition) throws CustomException {
+        Helper.checkNullValues(condition);
+        ClassMapping classMapping = ColumnYamlUtil.getMapping(condition.getClazz().getName());
+    	String table = classMapping.getTableName();
+        List<String> selectColumns = condition.getSelectColumn();
         StringBuilder selectSql = new StringBuilder("SELECT ");
         for (int i = 0; i < selectColumns.size(); i++) {
 	        selectSql.append(selectColumns.get(i));
@@ -233,16 +248,15 @@ public class SQLHelper {
 	    }
         selectSql.append(" FROM ").append(table);
         List<Object> conditionValues = new ArrayList<>();
-        if (conditions != null && !conditions.isEmpty()) {
-            QueryBuilder(selectSql, conditions, conditionValues);
+        if (condition != null) {
+            QueryBuilder(selectSql, condition, conditionValues);
         }
-        System.out.println(selectSql);
         List<T> list = new ArrayList<>();
         try (Connection connection = DBConnection.getConnection();
         	PreparedStatement preparedStatement = getPreparedStatement(connection, selectSql.toString(), conditionValues.toArray());
         	ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
-                list.add(mapResultSetToObject(resultSet, clazz, null, table));
+                list.add((T) mapResultSetToObject(resultSet, condition.getClazz(), null, table));
             }
             return list;
         } catch (SQLException e) {
@@ -287,8 +301,7 @@ public class SQLHelper {
     	        	insertSql.append(fieldMapping.getColumnName());
     	        	if (i < length - 1) {
     		            insertSql.append(", ");
-    		        }
-    	        	if(generatedValue != null && classMapping.getReferenceField().equals(field.getName())) {
+    		        } if(generatedValue != null && classMapping.getReferenceField().equals(field.getName())) {
     	        		values.add(generatedValue);
         	    	} else {
         	            values.add(field.get(pojo));

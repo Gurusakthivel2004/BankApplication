@@ -39,7 +39,7 @@ public class Customer extends User {
 
 	@Override
 	public String toString() {
-		return super.toString() + "Customer [id=" + getId() + ", panNumber=" + panNumber + ", aadharNumber=" + aadharNumber;
+		return super.toString() + "Customer [id=" + userId + ", panNumber=" + panNumber + ", aadharNumber=" + aadharNumber;
 	}
 
 	public Long getUserId() {

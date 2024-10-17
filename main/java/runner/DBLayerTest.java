@@ -3,9 +3,6 @@ package runner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import dblayer.dao.UserDAO;
-import dblayer.implementation.UserDAOImp;
 import dblayer.model.ColumnCriteria;
 import dblayer.model.Criteria;
 import dblayer.model.Customer;
@@ -19,7 +16,7 @@ public class DBLayerTest {
 	public static void main(String[] args) {
 		DBLayerTest dbLayerTest = new DBLayerTest();
 		try {
-			dbLayerTest.insertTest();
+			dbLayerTest.updateTest();
 		} catch (CustomException e) {
 			e.printStackTrace();
 		}
@@ -33,7 +30,7 @@ public class DBLayerTest {
 //		    setColumn("Orders.CustomerID");
 //		    setOperator("=");
 //		    setValue("Customers.CustomerID");
-//		}});
+//		}});testJoinAndWhereCondition
 //		joinCriteria.setColumn(" Orders.OrderDate");
 //		joinCriteria.setOrderBy("ASC");
 //		conditions.add(joinCriteria);
@@ -53,6 +50,23 @@ public class DBLayerTest {
 //		} catch (CustomException e) {
 //          System.out.print("Exception thrown while retrieving active customers: " + e.getMessage());
 //      }
+	}
+	
+	public static void updateTest() throws CustomException {
+		List<ColumnCriteria> listColumnCriterias = new ArrayList<>();
+		ColumnCriteria columnCriteria = new ColumnCriteria();
+		columnCriteria.setColumn("password");
+		columnCriteria.setValue("leomessi");
+		listColumnCriterias.add(columnCriteria);
+		
+		Criteria<Customer> customerJoinCriteria = new Criteria<>();
+		customerJoinCriteria.setClazz(Customer.class);
+		customerJoinCriteria.setSelectColumn(new ArrayList<> (Arrays.asList("*")));
+        customerJoinCriteria.setColumn("user_id");
+        customerJoinCriteria.setOperator("=");
+        customerJoinCriteria.setValue(3l);
+        
+        SQLHelper.update(listColumnCriterias, customerJoinCriteria);
 	}
 	
 	public static void insertTest() throws CustomException {
@@ -75,13 +89,13 @@ public class DBLayerTest {
 	}
 	
 	public static void testMapResultSet() throws CustomException {
-		List<Criteria> conditions = new ArrayList<>();
-		Criteria customerJoinCriteria = new Criteria();
+		Criteria<Customer> customerJoinCriteria = new Criteria<>();
+		customerJoinCriteria.setClazz(Customer.class);
+		customerJoinCriteria.setSelectColumn(new ArrayList<> (Arrays.asList("*")));
         customerJoinCriteria.setColumn("user_id");
         customerJoinCriteria.setOperator("=");
         customerJoinCriteria.setValue(3l);
-        conditions.add(customerJoinCriteria);
-        List<Customer> customers = SQLHelper.get("customer", Customer.class, new ArrayList<> (Arrays.asList("*")), conditions);
+        List<Customer> customers = SQLHelper.get(customerJoinCriteria);
         System.out.println(customers);
 	}
 	
@@ -96,22 +110,24 @@ public class DBLayerTest {
 //	WHERE user_id = ?
 
     private static void testJoinAndWhereCondition() throws CustomException {
-        List<Criteria> conditions = new ArrayList<>();
+        List<Criteria<Customer>> conditions = new ArrayList<>();
 
-        Criteria customerJoinCriteria = new Criteria();
-        Criteria joinCriteria = new Criteria();
+        Criteria<Customer> customerJoinCriteria = new Criteria<>();
+        Criteria<Customer> joinCriteria = new Criteria<>();
         joinCriteria.setColumn("user.id");
         joinCriteria.setTableName("user");
         joinCriteria.setOperator("=");
         joinCriteria.setValue("customer.user_id");
         customerJoinCriteria.setJoinType(" JOIN ");
+        customerJoinCriteria.setSelectColumn(new ArrayList<> (Arrays.asList("*")));
         customerJoinCriteria.setJoinCriteria(joinCriteria);
         customerJoinCriteria.setColumn("user_id");
+        customerJoinCriteria.setClazz(Customer.class);
         customerJoinCriteria.setOperator("=");
         customerJoinCriteria.setValue(3l);
         conditions.add(customerJoinCriteria);
         
-        List<Customer> customers = SQLHelper.get("customer", Customer.class, new ArrayList<> (Arrays.asList("user.*", "customer.*")), conditions);
+        List<Customer> customers = SQLHelper.get(customerJoinCriteria);
         System.out.println(customers);
     }
 

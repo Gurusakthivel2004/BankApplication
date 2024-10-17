@@ -2,15 +2,17 @@ package dblayer.model;
 
 import java.util.List;
 
-public class Criteria implements Bank {
+public class Criteria<T> implements Bank {
 	
+	private Class<T> clazz;
 	private String tableName;
+	private List<String> selectColumn;
     private String column;
     private Object value;
     private String operator;
     private List<Object> values;
     private String joinType; 
-    private Criteria joinCriteria;
+    private Criteria<T> joinCriteria;
     private String orderBy; 
     
     public String getTableName() {
@@ -69,11 +71,27 @@ public class Criteria implements Bank {
         this.orderBy = orderBy;
     }
 
-	public Criteria getJoinCriteria() {
+	public Criteria<T> getJoinCriteria() {
 		return joinCriteria;
 	}
 
-	public void setJoinCriteria(Criteria joinCriteria) {
+	public void setJoinCriteria(Criteria<T> joinCriteria) {
 		this.joinCriteria = joinCriteria;
+	}
+
+	public List<String> getSelectColumn() {
+		return selectColumn;
+	}
+
+	public void setSelectColumn(List<String> selectColumn) {
+		this.selectColumn = selectColumn;
+	}
+
+	public Class<?> getClazz() {
+		return clazz;
+	}
+
+	public void setClazz(Class<?> superclass) {
+		this.clazz = (Class<T>) superclass;
 	}
 }
