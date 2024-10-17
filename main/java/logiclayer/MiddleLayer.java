@@ -6,9 +6,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import dblayer.dao.AccountDAO;
+import dblayer.dao.CrudDAO;
 import dblayer.dao.CustomerDAO;
 import dblayer.dao.UserDAO;
 import dblayer.implementation.AccountDAOImp;
+import dblayer.implementation.CrudDAOImp;
 import dblayer.implementation.CustomerDAOImp;
 import dblayer.implementation.UserDAOImp;
 import dblayer.model.Account;
@@ -22,13 +24,13 @@ import dblayer.model.Transaction.TransactionType;
 import dblayer.model.User;
 import util.CustomException;
 import util.Helper;
+import util.SQLHelper;
 
 public class MiddleLayer {
 	
 	ThreadLocal<Long> threadLocal;
-	private static UserDAO userDAO = new UserDAOImp();
-	private static CustomerDAO customerDAO = new CustomerDAOImp();
-	private static AccountDAO accountDAO = new AccountDAOImp();
+	private long id = Helper.getThreadLocalValue();
+	private static CrudDAO crudDao = new CrudDAOImp();
 	
 	private MiddleLayer() {}
 
@@ -40,27 +42,21 @@ public class MiddleLayer {
         return SingletonHelper.INSTANCE;
     }
     
-    public void storeUser(User user) throws CustomException {
-    	Helper.checkEmail(user.getEmail());
-    	Helper.checkNumber(user.getPhone() + "");
-    	String hashedPassword = Helper.hashPassword(user.getPassword());
-    	user.setPassword(hashedPassword);
-    	userDAO.insertUser(user);
+    public void storeCustomer(Customer customer) throws CustomException {
+    	String hashedPassword = Helper.hashPassword(customer.getPassword());
+    	customer.setPassword(hashedPassword);
+    	crudDao.insert(customer);
     }
     
-    public <T> boolean storeCustomer(String table, T obj) throws CustomException {
-    	if(obj instanceof Customer) {
-    	    Customer customer = (Customer) obj;
-    	    Helper.checkRole(customer.getUserID(), "customer");
-    	} else if(obj instanceof CustomerDetail) {
-    		CustomerDetail customerDetail = (CustomerDetail) obj;
-    	    Helper.checkRole(customerDetail.getUserID(), "customer");
-    	} else if(obj instanceof Nominee) {
-    		Nominee nominee = (Nominee) obj;
-    	    Helper.checkRole(nominee.getUserId(), "customer");
-    	}
-    	customerDAO.insertCustomer("customer", obj);
-    	return true;
+    public void createAccount(Account account) throws CustomException {
+    	crudDao.insert(account);
+    }
+    
+    public List<Account> getAccounts(int limitValue) throws CustomException {
+    	Criteria<Account> criteria = new Criteria<>();
+    	criteria.setSimpleCondition(Account.class, new ArrayList<> (Arrays.asList("*")), "customer_id", "=", id);
+    	criteria.setLimitValue(limitValue);
+        return SQLHelper.get(criteria);
     }
     
     public void sendAmount(Transaction transaction) throws CustomException {

@@ -1,6 +1,6 @@
 package dblayer.model;
 
-public class ColumnCriteria implements Bank {
+public class ColumnCriteria {
 	
 	// column: field of the pojo class to be updated.
 	// value: value of the field.

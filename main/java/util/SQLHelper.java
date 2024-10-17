@@ -4,26 +4,18 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.SQLSyntaxErrorException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import org.w3c.dom.html.HTMLFieldSetElement;
-
-import com.mysql.cj.x.protobuf.MysqlxExpect.Open.Condition.Key;
-
 import dblayer.connect.DBConnection;
 import dblayer.model.ColumnCriteria;
 import dblayer.model.Criteria;
 import util.ColumnYamlUtil.ClassMapping;
-import util.TableYamlUtil.ColumnMapping;
 import util.ColumnYamlUtil.FieldMapping;
-import util.TableYamlUtil.TableMapping;
 
 public class SQLHelper {
 	
@@ -34,29 +26,26 @@ public class SQLHelper {
             if(instance == null) {
             	instance = clazz.getDeclaredConstructor().newInstance();
             }
-            ResultSetMetaData metaData = resultSet.getMetaData();
-            int columnCount = metaData.getColumnCount();
-            TableMapping tableMapping = TableYamlUtil.getMapping(tableName);
-            Map<String, ColumnMapping> columnMap = tableMapping.getFields();
-            for (int i = 1; i <= columnCount; i++) {
-                String columnName = metaData.getColumnName(i);
-                Object columnValue = resultSet.getObject(i);
-                try {
-                	ColumnMapping fieldMapping = columnMap.get(columnName);
-                	if(fieldMapping == null) {
+            ClassMapping classMapping = ColumnYamlUtil.getMapping(clazz.getName());
+    	    Map<String, FieldMapping> fieldMap = classMapping.getFields();
+    	    Field[] fields = clazz.getDeclaredFields();
+    	    for(Field field: fields) {
+    	    	try {
+    	    		FieldMapping fieldMapping = fieldMap.get(field.getName());
+        	    	if(fieldMapping == null) {
                 		continue;
                 	}
-                    Field field = clazz.getDeclaredField(fieldMapping.getColumnName());
-                    field.setAccessible(true);
+        	    	field.setAccessible(true);
+        	    	String columnName = fieldMapping.getColumnName();
+        	    	Object columnValue = resultSet.getObject(columnName);
                     field.set(instance, columnValue);
-                } catch (NoSuchFieldException e) {
-                	throw new CustomException(e.getMessage());
-                }
-            }
-          
+    	    	} catch(SQLSyntaxErrorException exception) {
+    	    		continue;
+    	    	}
+    	    }
             Class<?> superclass = clazz.getSuperclass();
-            if (superclass != null && !superclass.getName().equals("java.lang.Object")) {
-            	ClassMapping classMapping = ColumnYamlUtil.getMapping(superclass.getName());
+            if (superclass != null && !superclass.getName().equals("dblayer.model.MarkedClass")) {
+            	classMapping = ColumnYamlUtil.getMapping(superclass.getName());
                 String superClassTableName = classMapping.getTableName();
                 mapResultSetToObject(resultSet,(Class <? extends T>) superclass, instance, superClassTableName);
             }
@@ -112,8 +101,8 @@ public class SQLHelper {
                .append(" "+condition.getJoinCriteria().getOperator() + " ")
                .append(condition.getJoinCriteria().getValue());
         }
-        sql.append(" WHERE ");
         if(condition.getColumn() != null) {
+        	sql.append(" WHERE ");
         	sql.append(condition.getColumn()).append(" ");
         } if(condition.getOperator() != null) {
 	        switch (condition.getOperator().toUpperCase()) {
@@ -165,6 +154,8 @@ public class SQLHelper {
         }
         if (condition.getOrderBy() != null) {
             sql.append("ORDER BY ").append(condition.getOrderBy());
+        } if (condition.getLimitValue() != null) {
+            sql.append("LIMIT").append(condition.getLimitValue());
         }
 	}
 	
@@ -177,7 +168,6 @@ public class SQLHelper {
 	    Helper.checkNullValues(conditions);
 	    Helper.checkNullValues(columnCriteriaList);
 	    Class<? extends T> clazz = (Class<? extends T>) conditions.getClazz();
-	    
 	    ClassMapping classMapping = ColumnYamlUtil.getMapping(conditions.getClazz().getName());
 	    Map<String, FieldMapping> fieldMap = classMapping.getFields();
     	String table = classMapping.getTableName();
@@ -200,9 +190,13 @@ public class SQLHelper {
 	    if(values.size() > 0) {
 		    String query = updateSql.toString();
 		    Object[] valuesArray = values.toArray();
+		    if(classMapping.getReferedField() != null) {
+		    	conditions.setColumn(classMapping.getReferedField());
+		    }
 	        QueryBuilder(updateSql, conditions, values);
 	        query = table;
 	        valuesArray = null;
+	        System.out.println(updateSql.toString());
 //		    executeNonSelect(query, valuesArray);
 	    }
 	    Class<?> superclass = clazz.getSuperclass();
@@ -272,7 +266,7 @@ public class SQLHelper {
 	    
         Class<?> clazz = pojo.getClass();
         List<Class<?>> classList = new ArrayList<>();
-        while(!clazz.getName().equals("java.lang.Object")) {
+        while(!clazz.getName().equals("java.lang.MarkedClass")) {
         	classList.add(clazz);
         	clazz = clazz.getSuperclass();
         }

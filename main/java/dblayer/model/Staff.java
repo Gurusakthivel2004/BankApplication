@@ -2,26 +2,26 @@ package dblayer.model;
 
 public class Staff extends User {
 	
-	private Long userID;
-    private Long branchID;
+	private Long userId;
+    private Long branchId;
 	private Long createdAt;
     private Long modifiedAt;
     private Long performedBy;
     
-    public Long getUserID() {
-		return userID;
+    public Long getUserId() {
+		return userId;
 	}
     
-	public void setUserID(Long userID) {
-		this.userID = userID;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 	
-	public Long getBranchID() {
-		return branchID;
+	public Long getBranchId() {
+		return branchId;
 	}
 	
-	public void setBranchID(Long branchID) {
-		this.branchID = branchID;
+	public void setBranchId(Long branchId) {
+		this.branchId = branchId;
 	}
 	
 	public Long getCreatedAt() {
@@ -50,7 +50,7 @@ public class Staff extends User {
     
 	@Override
 	public String toString() {
-		return "Staff [userID=" + userID + ", branchID=" + branchID + ", createdAt=" + createdAt + ", modifiedAt="
+		return "Staff [userID=" + userId + ", branchID=" + branchId + ", createdAt=" + createdAt + ", modifiedAt="
 				+ modifiedAt + ", performedBy=" + performedBy + "]";
 	}
 }

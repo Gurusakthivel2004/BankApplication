@@ -2,7 +2,7 @@ package dblayer.model;
 
 import java.util.List;
 
-public class Criteria<T> implements Bank {
+public class Criteria<T> {
 	
 	private Class<T> clazz;
 	private String tableName;
@@ -14,9 +14,18 @@ public class Criteria<T> implements Bank {
     private String joinType; 
     private Criteria<T> joinCriteria;
     private String orderBy; 
+    private Object limitValue;
     
     public String getTableName() {
         return tableName;
+    }
+    
+    public void setSimpleCondition(Class<T> clazz, List<String> selectColumn, String column,String operator, Object value) {
+    	this.clazz = clazz;
+    	this.selectColumn = selectColumn;
+    	this.column = column;
+    	this.operator = operator;
+    	this.value = value;
     }
 
     public void setTableName(String tableName) {
@@ -93,5 +102,13 @@ public class Criteria<T> implements Bank {
 
 	public void setClazz(Class<?> superclass) {
 		this.clazz = (Class<T>) superclass;
+	}
+
+	public Object getLimitValue() {
+		return limitValue;
+	}
+
+	public void setLimitValue(Object limitValue) {
+		this.limitValue = limitValue;
 	}
 }

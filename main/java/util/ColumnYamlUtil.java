@@ -31,6 +31,7 @@ public class ColumnYamlUtil {
                 tableMapping.setTableName((String) tableMappingData.get("tableName"));
                 tableMapping.setAutoIncrementField((String) tableMappingData.get("autoIncrementField"));
                 tableMapping.setReferenceField((String) tableMappingData.get("referenceField"));
+                tableMapping.setReferedField((String) tableMappingData.get("referedField"));
 
                 Map<String, FieldMapping> fields = new HashMap<>();
                 Map<String, Object> fieldsData = (Map<String, Object>) tableMappingData.get("fields");
@@ -68,6 +69,7 @@ public class ColumnYamlUtil {
     public static class ClassMapping {
         private String tableName;
         private String referenceField;
+        private String referedField;
         private String autoIncrementField;
         private Map<String, FieldMapping> fields;
 
@@ -101,6 +103,14 @@ public class ColumnYamlUtil {
 
 		public void setReferenceField(String referenceField) {
 			this.referenceField = referenceField;
+		}
+
+		public String getReferedField() {
+			return referedField;
+		}
+
+		public void setReferedField(String referedField) {
+			this.referedField = referedField;
 		}
     }
 

@@ -1,6 +1,6 @@
 package dblayer.model;
 
-public class User implements Bank{
+public class User extends MarkedClass{
 
 	private Long id;
     private String fullname;

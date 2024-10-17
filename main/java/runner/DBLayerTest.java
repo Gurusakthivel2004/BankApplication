@@ -3,11 +3,12 @@ package runner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import dblayer.model.Account;
 import dblayer.model.ColumnCriteria;
 import dblayer.model.Criteria;
 import dblayer.model.Customer;
 import dblayer.model.CustomerDetail;
-import dblayer.model.User;
 import util.CustomException;
 import util.SQLHelper;
 
@@ -16,7 +17,7 @@ public class DBLayerTest {
 	public static void main(String[] args) {
 		DBLayerTest dbLayerTest = new DBLayerTest();
 		try {
-			dbLayerTest.updateTest();
+			dbLayerTest.testGet();
 		} catch (CustomException e) {
 			e.printStackTrace();
 		}
@@ -57,10 +58,14 @@ public class DBLayerTest {
 		ColumnCriteria columnCriteria = new ColumnCriteria();
 		columnCriteria.setColumn("password");
 		columnCriteria.setValue("leomessi");
+		ColumnCriteria columnCriteria2 = new ColumnCriteria();
+		columnCriteria2.setColumn("dob");
+		columnCriteria2.setValue("June");
 		listColumnCriterias.add(columnCriteria);
+		listColumnCriterias.add(columnCriteria2);
 		
 		Criteria<Customer> customerJoinCriteria = new Criteria<>();
-		customerJoinCriteria.setClazz(Customer.class);
+		customerJoinCriteria.setClazz(CustomerDetail.class);
 		customerJoinCriteria.setSelectColumn(new ArrayList<> (Arrays.asList("*")));
         customerJoinCriteria.setColumn("user_id");
         customerJoinCriteria.setOperator("=");
@@ -88,14 +93,10 @@ public class DBLayerTest {
 
 	}
 	
-	public static void testMapResultSet() throws CustomException {
-		Criteria<Customer> customerJoinCriteria = new Criteria<>();
-		customerJoinCriteria.setClazz(Customer.class);
-		customerJoinCriteria.setSelectColumn(new ArrayList<> (Arrays.asList("*")));
-        customerJoinCriteria.setColumn("user_id");
-        customerJoinCriteria.setOperator("=");
-        customerJoinCriteria.setValue(3l);
-        List<Customer> customers = SQLHelper.get(customerJoinCriteria);
+	public static void testGet() throws CustomException {
+		Criteria<Customer> criteria = new Criteria<>();
+		criteria.setSimpleCondition(Customer.class, new ArrayList<> (Arrays.asList("*")), null, null, null);
+        List<Customer> customers = SQLHelper.get(criteria);
         System.out.println(customers);
 	}
 	
@@ -124,7 +125,7 @@ public class DBLayerTest {
         customerJoinCriteria.setColumn("user_id");
         customerJoinCriteria.setClazz(Customer.class);
         customerJoinCriteria.setOperator("=");
-        customerJoinCriteria.setValue(3l);
+        customerJoinCriteria.setValue(2l);
         conditions.add(customerJoinCriteria);
         
         List<Customer> customers = SQLHelper.get(customerJoinCriteria);

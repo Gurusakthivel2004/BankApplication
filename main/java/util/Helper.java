@@ -16,11 +16,11 @@ public class Helper {
 	
     private static ThreadLocal<Long> threadLocal = ThreadLocal.withInitial(() -> 0l);
     
-    public static Long get() {
+    public static Long getThreadLocalValue() {
     	return threadLocal.get();
     }
      
-    public static void set(Long newValue) {
+    public static void setThreadLocalValue(Long newValue) {
     	threadLocal.set(newValue);
     }
     

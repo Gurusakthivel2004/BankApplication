@@ -2,7 +2,7 @@ package dblayer.model;
 
 import java.math.BigDecimal;
 
-public class Account implements Bank {
+public class Account extends MarkedClass {
 	
 	enum AccountStatus {
 	  Suspended,
