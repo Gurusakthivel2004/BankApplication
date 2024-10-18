@@ -1,27 +1,13 @@
 package logiclayer;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import dblayer.dao.AccountDAO;
 import dblayer.dao.CrudDAO;
-import dblayer.dao.CustomerDAO;
-import dblayer.dao.UserDAO;
-import dblayer.implementation.AccountDAOImp;
 import dblayer.implementation.CrudDAOImp;
-import dblayer.implementation.CustomerDAOImp;
-import dblayer.implementation.UserDAOImp;
 import dblayer.model.Account;
 import dblayer.model.ColumnCriteria;
 import dblayer.model.Criteria;
-import dblayer.model.Customer;
 import dblayer.model.CustomerDetail;
-import dblayer.model.Nominee;
-import dblayer.model.Transaction;
-import dblayer.model.Transaction.TransactionType;
-import dblayer.model.User;
 import util.CustomException;
 import util.Helper;
 import util.SQLHelper;
@@ -42,43 +28,96 @@ public class MiddleLayer {
         return SingletonHelper.INSTANCE;
     }
     
-    public void storeCustomer(Customer customer) throws CustomException {
-    	String hashedPassword = Helper.hashPassword(customer.getPassword());
-    	customer.setPassword(hashedPassword);
+    // Customer handles
+    
+    public void createCustomer(CustomerDetail customer) throws CustomException {
+    	Helper.checkNullValues(customer);
+    	customer.setCreatedAt(System.currentTimeMillis());
+    	customer.setPerformedBy(id);
     	crudDao.insert(customer);
     }
+    
+    public void updateCustomer(ColumnCriteria columnCriteria, Criteria criterias) throws CustomException {
+    	Helper.checkNullValues(criterias);
+    	Helper.checkNullValues(columnCriteria);
+    	columnCriteria.getColumn().add("modified_at");
+    	columnCriteria.getColumn().add("performed_by");
+    	columnCriteria.getValue().add(System.currentTimeMillis());
+    	columnCriteria.getValue().add(id);
+    	crudDao.update(columnCriteria, criterias);
+    }
+    
+    public List<CustomerDetail> getCustomers(long customerId) throws CustomException {
+    	Criteria customerJoinCriteria = new Criteria();
+        customerJoinCriteria.setJoinTable(Arrays.asList("customer", "user"));
+        customerJoinCriteria.setJoinColumn(Arrays.asList("customerDetail.user_id", "customer.user_id"));
+        customerJoinCriteria.setJoinOperator(Arrays.asList("=", "="));
+        customerJoinCriteria.setJoinValue(Arrays.asList("customer.user_id", "user.id"));
+        customerJoinCriteria.setSelectColumn(Arrays.asList("*"));
+        customerJoinCriteria.setColumn(Arrays.asList("customerDetail.user_id"));
+        customerJoinCriteria.setClazz(CustomerDetail.class);
+        customerJoinCriteria.setOperator(Arrays.asList("="));
+        customerJoinCriteria.setValue(Arrays.asList(2l));
+        return crudDao.get(customerJoinCriteria);
+    }
+    
+    public void RemoveCustomer(long customerId) throws CustomException {
+    	ColumnCriteria columnCriteria = new ColumnCriteria();
+    	columnCriteria.setColumn(Arrays.asList("status"));
+    	columnCriteria.setValue(Arrays.asList("Inactive"));
+    	Criteria criteria = new Criteria();
+    	criteria.setClazz(CustomerDetail.class);
+    	if(customerId > 0) {
+    		criteria.getColumn().add("id");
+    		criteria.getOperator().add("=");
+    		criteria.getValue().add(customerId);
+    	}
+    	crudDao.update(columnCriteria, criteria);
+    }
+    
+    // Account handles
     
     public void createAccount(Account account) throws CustomException {
     	crudDao.insert(account);
     }
     
-    public List<Account> getAccounts(int limitValue) throws CustomException {
-    	Criteria<Account> criteria = new Criteria<>();
-    	criteria.setSimpleCondition(Account.class, new ArrayList<> (Arrays.asList("*")), "customer_id", "=", id);
-    	criteria.setLimitValue(limitValue);
+    public List<Account> getAccounts(long branchId, long customerId, int limitValue) throws CustomException {
+    	Criteria criteria = new Criteria();
+    	criteria.getSimpleCondition(Account.class, Arrays.asList("*"), Arrays.asList("status"), Arrays.asList("="), Arrays.asList("Active"));
+    	if(customerId > 0) {
+    		criteria.getColumn().add("customer_id");
+    		criteria.getOperator().add("=");
+    		criteria.getValue().add(customerId);
+    	} if(branchId > 0) {
+    		criteria.getColumn().add("branch_id");
+    		criteria.getOperator().add("=");
+    		criteria.getValue().add(branchId);
+    	} if (limitValue > 0) {
+    		criteria.setLimitValue(limitValue);
+    	}
         return SQLHelper.get(criteria);
     }
     
-    public void sendAmount(Transaction transaction) throws CustomException {
+    public <T> void updateAccount(ColumnCriteria columnCriterias, Criteria criteria) throws CustomException {
+    	crudDao.update(columnCriterias, criteria);
+    }
+    
+    public void RemoveAccount(long customerId, long accountNumber) throws CustomException {
+    	ColumnCriteria columnCriteria = new ColumnCriteria();
+    	columnCriteria.setColumn(Arrays.asList("status"));
+    	columnCriteria.setValue(Arrays.asList("Inactive"));
     	Criteria criteria = new Criteria();
-    	criteria.setColumn("account_number");
-    	criteria.setOperator("=");
-    	criteria.setValue(transaction.getTransactionAccountNumber());
-    	Account account = accountDAO.getAccount(new ArrayList<String>(Arrays.asList("customer_id", "balance")), 
-    			new ArrayList<Criteria>(Arrays.asList(criteria))).get(0);
-    	if(account == null) {
-    		throw new CustomException("Transaction account doesnt exists");
+    	criteria.setClazz(Account.class);
+    	if(customerId > 0) {
+    		criteria.getColumn().add("customer_id");
+    		criteria.getOperator().add("=");
+    		criteria.getValue().add(customerId);
+    	} if(accountNumber > 0) {
+    		criteria.getColumn().add("account_number");
+    		criteria.getOperator().add("=");
+    		criteria.getValue().add(accountNumber);
     	}
-    	BigDecimal transAccountupdatedBalance = account.getBalance().add(transaction.getAmount());
-    	crudDAO.update("account", new String[] {"balance, modified_at, customer_id"}, new Object[] {transaction.getClosingBalance(), System.currentTimeMillis(), transaction.getCustomerId()});
-    	crudDAO.update("account", new String[] {"balance, modified_at, customer_id"}, new Object[] {transAccountupdatedBalance, System.currentTimeMillis(), account.getCustomerId()});
-    	crudDAO.insert("transaction", transaction);
-    	transaction.setCustomerId(account.getCustomerId());
-    	transaction.setTransactionAccountNumber(transaction.getAccountNumber());
-    	transaction.setAccountNumber(account.getAccountNumber());
-    	transaction.setTransactionType(TransactionType.CREDIT);	
-    	transaction.setClosingBalance(transAccountupdatedBalance);
-    	crudDAO.insert("transaction", transaction);
+    	crudDao.update(columnCriteria, criteria);
     }
 	
 }

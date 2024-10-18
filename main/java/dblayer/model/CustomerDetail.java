@@ -66,7 +66,7 @@ public class CustomerDetail extends Customer {
 
 	@Override
 	public String toString() {
-		return "CustomerDetail [id=" + getId() + ", dob=" + dob + ", fatherName=" + fatherName + ", motherName="
+		return super.toString() + "CustomerDetail [id=" + getId() + ", dob=" + dob + ", fatherName=" + fatherName + ", motherName="
 				+ motherName + ", address=" + address + ", maritalStatus=" + maritalStatus + "]";
 	}
 

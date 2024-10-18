@@ -1,22 +1,25 @@
 package dblayer.model;
 
+import java.util.List;
+
 public class ColumnCriteria {
 	
 	// column: field of the pojo class to be updated.
 	// value: value of the field.
-    private String column; 
-    private Object value; 
+	
+    private List<String> column; 
+    private List<Object> value; 
     
-	public String getColumn() {
+	public List<String> getColumn() {
 		return column;
 	}
-	public void setColumn(String column) {
+	public void setColumn(List<String> column) {
 		this.column = column;
 	}
-	public Object getValue() {
+	public List<Object> getValue() {
 		return value;
 	}
-	public void setValue(Object value) {
+	public void setValue(List<Object> value) {
 		this.value = value;
 	}
 

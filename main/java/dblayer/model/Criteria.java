@@ -2,17 +2,20 @@ package dblayer.model;
 
 import java.util.List;
 
-public class Criteria<T> {
+public class Criteria {
 	
-	private Class<T> clazz;
+	private Class<? extends MarkedClass> clazz;
 	private String tableName;
 	private List<String> selectColumn;
-    private String column;
-    private Object value;
-    private String operator;
+	private List<String> column;
+    private List<Object> value;
+    private List<String> operator;
+    private String logicalOperator;
     private List<Object> values;
-    private String joinType; 
-    private Criteria<T> joinCriteria;
+	private List<String> joinColumn;
+	private List<String> joinOperator;
+	private List<String> joinValue;
+    private List<Object> joinTable;
     private String orderBy; 
     private Object limitValue;
     
@@ -20,7 +23,7 @@ public class Criteria<T> {
         return tableName;
     }
     
-    public void setSimpleCondition(Class<T> clazz, List<String> selectColumn, String column,String operator, Object value) {
+    public void getSimpleCondition(Class<? extends MarkedClass> clazz, List<String> selectColumn, List<String> column,List<String> operator, List<Object> value) {
     	this.clazz = clazz;
     	this.selectColumn = selectColumn;
     	this.column = column;
@@ -32,19 +35,19 @@ public class Criteria<T> {
         this.tableName = tableName;
     }
     
-    public String getColumn() {
+    public List<String> getColumn() {
         return column;
     }
 
-    public void setColumn(String column) {
+    public void setColumn(List<String> column) {
         this.column = column;
     }
 
-    public Object getValue() {
+    public List<Object> getValue() {
         return value;
     }
 
-    public void setValue(Object value) {
+    public void setValue(List<Object> value) {
         this.value = value;
     }
 
@@ -56,22 +59,14 @@ public class Criteria<T> {
         this.values = values;
     }
 
-    public String getOperator() {
+    public List<String> getOperator() {
         return operator;
     }
 
-    public void setOperator(String operator) {
+    public void setOperator(List<String> operator) {
         this.operator = operator;
     }
-
-    public String getJoinType() {
-        return joinType;
-    }
-
-    public void setJoinType(String joinType) {
-        this.joinType = joinType;
-    }
-
+    
     public String getOrderBy() {
         return orderBy;
     }
@@ -79,14 +74,6 @@ public class Criteria<T> {
     public void setOrderBy(String orderBy) {
         this.orderBy = orderBy;
     }
-
-	public Criteria<T> getJoinCriteria() {
-		return joinCriteria;
-	}
-
-	public void setJoinCriteria(Criteria<T> joinCriteria) {
-		this.joinCriteria = joinCriteria;
-	}
 
 	public List<String> getSelectColumn() {
 		return selectColumn;
@@ -100,8 +87,8 @@ public class Criteria<T> {
 		return clazz;
 	}
 
-	public void setClazz(Class<?> superclass) {
-		this.clazz = (Class<T>) superclass;
+	public void setClazz(Class<? extends MarkedClass> clazz) {
+		this.clazz = clazz;
 	}
 
 	public Object getLimitValue() {
@@ -110,5 +97,45 @@ public class Criteria<T> {
 
 	public void setLimitValue(Object limitValue) {
 		this.limitValue = limitValue;
+	}
+
+	public String getLogicalOperator() {
+		return logicalOperator;
+	}
+
+	public void setLogicalOperator(String logicalOperator) {
+		this.logicalOperator = logicalOperator;
+	}
+
+	public List<String> getJoinColumn() {
+		return joinColumn;
+	}
+
+	public void setJoinColumn(List<String> joinColumn) {
+		this.joinColumn = joinColumn;
+	}
+
+	public List<String> getJoinValue() {
+		return joinValue;
+	}
+
+	public void setJoinValue(List<String> joinValue) {
+		this.joinValue = joinValue;
+	}
+
+	public List<Object> getJoinTable() {
+		return joinTable;
+	}
+
+	public void setJoinTable(List<Object> joinTable) {
+		this.joinTable = joinTable;
+	}
+
+	public List<String> getJoinOperator() {
+		return joinOperator;
+	}
+
+	public void setJoinOperator(List<String> joinOperator) {
+		this.joinOperator = joinOperator;
 	}
 }

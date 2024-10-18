@@ -21,8 +21,8 @@ public class CrudDAOImp implements CrudDAO {
 	}
 
 	@Override
-	public <T> void update(List<ColumnCriteria> columnCriteriaList, Criteria<T> conditions) throws CustomException {
-		SQLHelper.update(columnCriteriaList, conditions);
+	public <T> void update(List<ColumnCriteria> columnCriteriaList, Criteria<T> criterias) throws CustomException {
+		SQLHelper.update(columnCriteriaList, criterias);
 	}
 
 	@Override

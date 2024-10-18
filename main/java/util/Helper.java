@@ -54,20 +54,20 @@ public class Helper {
 //    	}
 //    }
 //    
-//    public static boolean checkUserPassword(String username, String password) throws CustomException {
-//    	ColumnCriteria columnCriteria = new ColumnCriteria();
-//    	columnCriteria.setColumn("password");
-//    	Criteria criteria = new Criteria();
-//    	criteria.setColumn("username");
-//    	criteria.setOperator("=");
-//    	criteria.setValue(username);
-//    	List<User> rows = userDAO.getUser(new ArrayList<ColumnCriteria>(Arrays.asList(columnCriteria)), 
-//    			new ArrayList<Criteria>(Arrays.asList(criteria)));
-//    	if(rows.size() == 0) {
-//    		throw new CustomException("No user exists with the username");
-//    	}
-//    	return Helper.checkPassword(password, rows.get(0).getPassword());
-//    }
+    public static boolean checkUserPassword(String username, String password) throws CustomException {
+    	ColumnCriteria columnCriteria = new ColumnCriteria();
+    	columnCriteria.setColumn("password");
+    	Criteria criteria = new Criteria();
+    	criteria.setColumn("username");
+    	criteria.setOperator("=");
+    	criteria.setValue(username);
+    	List<User> rows = userDAO.getUser(new ArrayList<ColumnCriteria>(Arrays.asList(columnCriteria)), 
+    			new ArrayList<Criteria>(Arrays.asList(criteria)));
+    	if(rows.size() == 0) {
+    		throw new CustomException("No user exists with the username");
+    	}
+    	return Helper.checkPassword(password, rows.get(0).getPassword());
+    }
 	
 	public static void checkNumber(String number) throws CustomException {
 		checkNullValues(number);
