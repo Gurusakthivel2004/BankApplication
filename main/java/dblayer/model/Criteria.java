@@ -1,5 +1,6 @@
 package dblayer.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Criteria {
@@ -29,6 +30,12 @@ public class Criteria {
     	this.column = column;
     	this.operator = operator;
     	this.value = value;
+    }
+    
+    public void initialize() {
+    	column = new ArrayList<String>();
+    	value = new ArrayList<Object>();
+    	operator = new ArrayList<String>();
     }
 
     public void setTableName(String tableName) {

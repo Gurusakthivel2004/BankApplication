@@ -14,7 +14,7 @@ public class DBLayerTest {
 
 	public static void main(String[] args) {
 		try {
-			DBLayerTest.testJoinAndWhereCondition();
+			DBLayerTest.updateTest();
 		} catch (CustomException e) {
 			e.printStackTrace();
 		}
@@ -22,8 +22,8 @@ public class DBLayerTest {
 	
 	public static void updateTest() throws CustomException {
 		ColumnCriteria columnCriteria = new ColumnCriteria();
-		columnCriteria.setColumn(Arrays.asList("password", "dob"));
-		columnCriteria.setValue(Arrays.asList("lapulga", "21-06-1987"));
+		columnCriteria.setFields(Arrays.asList("password", "dob"));
+		columnCriteria.setValues(Arrays.asList("lro", "21-06-1987"));
 		
 		Criteria customerJoinCriteria = new Criteria();
 		customerJoinCriteria.setClazz(CustomerDetail.class);

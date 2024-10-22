@@ -3,25 +3,13 @@ package dblayer.model;
 import java.math.BigDecimal;
 
 public class Transaction extends MarkedClass{
-	
-	public enum TransactionType {
-	    CREDIT,
-	    DEBIT
-	}
-	
-	public enum TransactionStatus {
-	    PENDING,
-	    COMPLETED,
-	    FAILED,
-	    CANCELLED
-	}
 
     private Long id;
     private Long customerID;
     private Long accountNumber;
     private Long transactionAccountNumber;
-    private TransactionType transactionType;
-    private TransactionStatus status;
+    private String transactionType;
+    private String status;
     private String remarks;
     private BigDecimal amount;
     private BigDecimal closingBalance;
@@ -62,19 +50,19 @@ public class Transaction extends MarkedClass{
         this.transactionAccountNumber = transactionAccountNumber;
     }
 
-    public TransactionType getTransactionType() {
+    public String getTransactionType() {
         return transactionType;
     }
 
-    public void setTransactionType(TransactionType transactionType) {
+    public void setTransactionType(String transactionType) {
         this.transactionType = transactionType;
     }
 
-    public TransactionStatus getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(TransactionStatus status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

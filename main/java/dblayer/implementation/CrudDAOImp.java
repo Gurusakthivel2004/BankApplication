@@ -16,17 +16,17 @@ public class CrudDAOImp implements CrudDAO {
 	}
 
 	@Override
-	public <T> List<T> get(Criteria<T> conditions) throws CustomException {
+	public <T> List<T> get(Criteria conditions) throws CustomException {
 		return SQLHelper.get(conditions);
 	}
 
 	@Override
-	public <T> void update(List<ColumnCriteria> columnCriteriaList, Criteria<T> criterias) throws CustomException {
+	public void update(ColumnCriteria columnCriteriaList, Criteria criterias) throws CustomException {
 		SQLHelper.update(columnCriteriaList, criterias);
 	}
 
 	@Override
-	public <T> void delete(Criteria<T> conditions) throws CustomException {
+	public <T> void delete(Criteria conditions) throws CustomException {
 		SQLHelper.delete(conditions);
 	}
 

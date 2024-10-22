@@ -83,8 +83,8 @@ classes:
         columnName: "accountNumber"
       branchId:
         columnName: "branch_id"
-      customerId:
-        columnName: "customer_id"
+      userId:
+        columnName: "user_id"
       accountType:
         columnName: "account_type"
       status:

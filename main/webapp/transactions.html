@@ -66,9 +66,9 @@
         .transaction-history .transaction-item {
             display: flex;
             background-color: #2b0444;
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
             padding: 10px 0;
-            border-bottom: 1px solid #ddd;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+            border-bottom: 2px solid #ddd;
         }
 
         .transaction-history .transaction-item .left {
@@ -87,7 +87,6 @@
             display: flex;
             align-items: center;
             font-family: sans-serif;
-            font-weight: 900;
             font-size: larger;
             padding-top: 10px; 
             padding-bottom: 10px;
@@ -95,10 +94,11 @@
         
         .tid {
             padding-left: 30px;
-            flex: 0 0 120px; 
+            flex: 0 0 180px; 
         }
         .tfrom {
-            flex: 0 0 400px;
+            flex: 0 0 300px;
+            font-weight: 900;
         }
         .ttype {
             flex: 0 0 200px;
@@ -112,11 +112,8 @@
         .tremarks {
             flex: 0 0 300px;
         }
-        .ttime {
-        	flex: 0 0 150px;	
-        }
-        .tdate {
-            flex: 0 0 150px; 
+        .ttimestamp {
+        	flex: 0 0 300px;	
         }
         
         nav {
@@ -137,22 +134,6 @@
             color: #d9534f; 
         }
 
-
-        .welcome-message {
-            font-family: sans-serif;
-            letter-spacing: -0.5px;
-            font-weight: 800;
-            color: #2b0444;
-        }
-
-        .account-balance {
-            text-align: center;
-            font-size: 48px;
-            color: #2b0444; 
-            margin-top: 20px;
-            font-weight: 800;
-        }
-        
         .mobile-dropdown .dropdown-menu {
             width: 100%; 
             margin: auto;
@@ -187,10 +168,6 @@
             .profile-dropdown {
             	display: none;
             }
-             #balance {
-            	font-size: 200%;
-            }
-            
             .transaction-block {
             	display: none;
             }
@@ -199,9 +176,6 @@
         @media (min-width: 768px) {
             .mobile-dropdown {
                 display: none;
-            }
-            #balance {
-            	font-size: 600%;
             }
         }
 
@@ -221,7 +195,7 @@
     <div>
         <nav style="background-color: white; color:#2b0444;" class="d-flex justify-content-between align-items-center">
             <div class="d-flex align-items-center">
-                <img class="w-5 h-5" width="100px" height="100px" src="./images/logo2.png"/>
+                <a class="m-0 p-0"  href="dashboard.html"><img class="w-5 h-5" width="100px" height="100px" src="./images/logo2.png"/></a>
                 <h1 style="padding-right: 50px; text-decoration: underline; font-family: sans-serif; letter-spacing: -0.5px; font-weight: 990; font-size: xxx-large; color: #2b0444;">Horizon</h1>
             </div>
             <div class="d-flex justify-content-between">
@@ -272,40 +246,61 @@
 	                <a class="text-white" href="#">Payment</a>
                 </div>
             </div>
-            <div class="right-section">
-                <div class="w-100 d-flex align-items-center justify-content-center row">
-                    <div class="d-flex w-100 column my-2">
-                        <p style="font-family: sans-serif; letter-spacing: -0.5px; font-weight: 800; font-size: larger; color: #2b0444; text-align: left;">Welcome <span style="font-size: xx-large; font-weight: 990; color: #4677bd;">Gurusakthivel V</span></p>
-                         <div class="accounts-dropdown" style="margin-left: auto;">
-		                    <button class="btn" style="padding: 10px; border: 2px solid #2b0444; box-shadow: 0px 7px 9px rgba(0, 0, 0, 0.1);" type="button" id="accountDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-		                         <p class="dropdown-toggle" style="margin: 0; font-family: sans-serif; letter-spacing: -0.5px; font-weight: 800; font-size: larger; color: #2b0444; text-align: left;">Accounts</p>
-		                    </button>
-		                    <ul class="dropdown-menu shadow text-center" aria-labelledby="accountDropdown">
-		                        <li><a class="dropdown-item" href="#">xxxxx610459</a></li>
-		                        <li><a class="dropdown-item active" href="#">xxxxx15812</a></li>
-		                        <li><a class="dropdown-item" href="#">xxxxx72466</a></li>
-		                    </ul>
-		                </div>
-                    </div>
-                    <div class="d-flex w-100 column">
-                        <p style="margin: 0; font-family: sans-serif; letter-spacing: -0.5px; font-weight: 800; font-size: larger; color: #2b0444; text-align: left;">Last Updated: 13/09/2024</p>
-                        <p style="font-family: sans-serif; letter-spacing: -0.5px; font-weight: 800; font-size: larger; color: #2b0444; margin-left: auto; text-align: left;">Savings</p>
-                    </div>
-                    <hr>
-                    <div class="d-flex w-100 column">
-                        <p style="margin: 0; font-family: sans-serif; letter-spacing: -0.5px; font-weight: 800; font-size: larger; color: #2b0444; text-align: left;">Account Balance : &#8377; 2,312.00</p>
-                        <p style="font-family: sans-serif; letter-spacing: -0.5px; font-weight: 800; font-size: larger; color: #2b0444; margin-left: auto; text-align: left;">Active</p>
-                    </div>
+            <div class="right-section ">               				
+                <div class="transaction-block d-flex row">
+                	<div class="d-flex column mb-3 justify-content-between align-items-baseline">
+				    <h3 style="font-family: sans-serif; font-weight: 900; color: #2b0444; font-size: larger;">Transactions</h3>
+				    <div class="transaction-filter d-flex column">
+				        <div class="id-dropdown d-flex align-center" style="align-items:baseline; margin-bottom: 10px;padding-right: 20px">
+				            <p style="font-weight: 600; font-size: large; margin-right: 10px;">Id:</p>
+				            <input class="form-control" 
+				                   style="padding: 8px; border: 1px solid #2b0444; box-shadow: 0px 7px 9px rgba(0, 0, 0, 0.1); width: 100px;" 
+				                   type="text" 
+				                   id="IdsearchInput"  
+				                   onkeyup="filterDropdown()"
+				                   aria-expanded="false">
+				            <ul class="dropdown-menu shadow text-center" id="IdsearchDropdown" style="display: none;">
+				                <!-- for dynamically fetched items -->
+				            </ul>
+				        </div>
+				        
+				        <div class="id-dropdown d-flex align-center pr-5" style="align-items:baseline; margin-bottom: 10px;padding-right: 20px">
+				            <p style="font-weight: 600; font-size: large; margin-right: 10px;">Account:</p>
+				            <input class="form-control" 
+				                   style="padding: 8px; border: 1px solid #2b0444; box-shadow: 0px 7px 9px rgba(0, 0, 0, 0.1); width: 200px;" 
+				                   type="text" 
+				                   id="AccountsearchInput"  
+				                   onkeyup="filterDropdown()"
+				                   aria-expanded="false">
+				            <ul class="dropdown-menu shadow text-center" id="AccountsearchDropdown" style="display: none;">
+				                <!-- for dynamically fetched items -->
+				            </ul>
+				        </div>
+				        
+				        <div class="id-dropdown d-flex align-center" style="align-items:baseline; margin-bottom: 10px;padding-right: 20px">
+				            <p style="font-weight: 600; font-size: large; margin-right: 10px;">From:</p>
+				            <input class="form-control" 
+				                   style="padding: 8px; border: 1px solid #2b0444; box-shadow: 0px 7px 9px rgba(0, 0, 0, 0.1); width: 200px;" 
+				                   type="date" 
+				                   id="FromDatesearchInput"  
+				                   onkeyup="filterDropdown()"
+				                   aria-expanded="false">
+				        </div>
+				        
+				        <div class="id-dropdown d-flex align-center" style="align-items:baseline; margin-bottom: 10px;">
+				            <p style="font-weight: 600; font-size: large; margin-right: 10px;">To:</p>
+				            <input class="form-control" 
+				                   style="padding: 8px; border: 1px solid #2b0444; box-shadow: 0px 7px 9px rgba(0, 0, 0, 0.1); width: 200px;" 
+				                   type="date" 
+				                   id="ToDatesearchInput"  
+				                   onkeyup="filterDropdown()"
+				                   aria-expanded="false">
+				        </div>
+				    </div>
+				</div>
 
-                    <h1 id="balance" style="font-family: sans-serif; letter-spacing: -0.5px; font-weight: 990; color: #2b0444; text-align: center;" class="h-auto my-5">&#8377; 5,625.19</h1>
-                </div>
-				
-                <div class="transaction-block">
-	                <h3 style="font-family: sans-serif; font-weight: 900; color: #2b0444; font-size: larger;">Transactions</h3>
-	                <hr>
-	               <div style="background-color: #2b0444;" class="transaction-history text-white rounded mx-auto">
-	               
-				        <div style="background-color: #2b0444; color: white; font-weight: 900; padding: 10px;" class="transaction-item">
+	               <div class="transaction-history text-white rounded">
+					    <div style="background-color: #2b0444; color: white; font-weight: 900; padding: 10px;" class="transaction-item">
 					        <p class="tid" style="width: 10%; font-size: larger;">ID</p>
 					        <p class="tfrom" style="width: 20%;">Recipient Account</p>
 					        <p class="tamount" style="width: 15%; font-size: larger; color: white;">Amount</p>
@@ -361,6 +356,16 @@
 					        <p class="ttype" style="width: 10%; color: #2b0444;">Credit</p>
 					        <p class="tremarks" style="width: 20%; color: #2b0444;">Electrical Bill</p>
 					    </div>
+					     <div class="transaction-item d-flex align-items-center" style="background-color: #f9f9f9; padding: 10px; border-bottom: 1px solid #ddd;">
+					        <p class="tid" style="width: 10%; font-weight: bold; color: #2b0444;">412</p>
+					        <p class="tfrom" style="width: 20%; color: #2b0444;">xxxxxx012609</p>
+					        <p class="tamount" style="width: 15%; font-weight: bold; color: #28a745;">&#8377; 5,612</p>
+					        <p class="ttimestamp" style="width: 20%; font-weight: bold; color: #6c757d;">12/08/2024, 9:21 AM</p>
+					        <p class="tstatus" style="width: 15%; font-weight: bold; color: blue;">Completed</p>
+					        <p class="ttype" style="width: 10%; color: #2b0444;">Credit</p>
+					        <p class="tremarks" style="width: 20%; color: #2b0444;">Electrical Bill</p>
+					    </div>
+				       
 				    </div>
 	             </div>
             </div>

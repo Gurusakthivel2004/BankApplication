@@ -4,23 +4,23 @@ import java.util.List;
 
 public class ColumnCriteria {
 	
-	// column: field of the pojo class to be updated.
-	// value: value of the field.
+	// fields: fields of the pojo class to be updated.
+	// values: values of the field.
 	
-    private List<String> column; 
-    private List<Object> value; 
+    private List<String> fields; 
+    private List<Object> values; 
     
-	public List<String> getColumn() {
-		return column;
+	public List<String> getFields() {
+		return fields;
 	}
-	public void setColumn(List<String> column) {
-		this.column = column;
+	public void setFields(List<String> field) {
+		this.fields = field;
 	}
-	public List<Object> getValue() {
-		return value;
+	public List<Object> getValues() {
+		return values;
 	}
-	public void setValue(List<Object> value) {
-		this.value = value;
+	public void setValues(List<Object> values) {
+		this.values = values;
 	}
 
 }

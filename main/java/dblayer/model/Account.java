@@ -4,23 +4,11 @@ import java.math.BigDecimal;
 
 public class Account extends MarkedClass {
 	
-	enum AccountStatus {
-	  Suspended,
-	  Active,
-	  Inactive
-	}
-	
-	enum AccountType {
-	  Savings,
-	  Current,
-	  Fixed_Deposit
-	}
-    
     private Long accountNumber;
     private Long branchId;
-    private Long customerId;
-    private AccountType accountType;
-    private AccountStatus status;
+    private Long userId;
+    private String accountType;
+    private String status;
     private BigDecimal balance;
     private BigDecimal minBalance;
     private Long createdAt;
@@ -45,27 +33,27 @@ public class Account extends MarkedClass {
         this.branchId = branchId;
     }
 
-    public Long getCustomerId() {
-        return customerId;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public AccountType getAccountType() {
+    public String getAccountType() {
         return accountType;
     }
 
-    public void setAccountType(AccountType accountType) {
+    public void setAccountType(String accountType) {
         this.accountType = accountType;
     }
 
-    public AccountStatus getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(AccountStatus status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -114,7 +102,7 @@ public class Account extends MarkedClass {
         return "Account{" +
                 "accountNumber=" + accountNumber +
                 ", branchId=" + branchId +
-                ", customerId=" + customerId +
+                ", customerId=" + userId +
                 ", accountType=" + accountType +
                 ", status=" + status +
                 ", balance=" + balance +

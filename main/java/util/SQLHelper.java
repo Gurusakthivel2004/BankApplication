@@ -92,13 +92,15 @@ public class SQLHelper {
 	public static <T> void QueryBuilder(StringBuilder sql,Criteria condition, List<Object> conditionValues) throws CustomException {
 		List<String> joinColumn = condition.getJoinColumn(), joinValue = condition.getJoinValue(), joinOperator = condition.getJoinOperator();
 	    List<Object> joinTable = condition.getJoinTable();
-		int len = condition.getJoinColumn().size();
-		for(int i=0;i<len;i++) {
-			sql.append(" JOIN " + joinTable.get(i) + " ON ")
-            	.append(joinColumn.get(i))
-            	.append(" "+ joinOperator.get(i) + " ")
-            	.append(joinValue.get(i));
-		}
+	    if(condition.getJoinColumn() != null) {
+	    	int len = condition.getJoinColumn().size();
+			for(int i=0;i<len;i++) {
+				sql.append(" JOIN " + joinTable.get(i) + " ON ")
+	            	.append(joinColumn.get(i))
+	            	.append(" "+ joinOperator.get(i) + " ")
+	            	.append(joinValue.get(i));
+			}
+	    }
         List<String> columns = condition.getColumn(), operators = condition.getOperator();
         List<Object> columnvalues = condition.getValue();
         if(columns.size() != 0) {
@@ -168,8 +170,8 @@ public class SQLHelper {
 	    Map<String, FieldMapping> fieldMap = classMapping.getFields();
     	String table = classMapping.getTableName();
 	    StringBuilder updateSql = new StringBuilder("UPDATE " + table + " SET ");
-	    List<Object> values = new ArrayList<>(), setValues = columnCriteriaList.getValue(); 
-	    List<String> setColumns = columnCriteriaList.getColumn();
+	    List<Object> values = new ArrayList<>(), setValues = columnCriteriaList.getValues(); 
+	    List<String> setColumns = columnCriteriaList.getFields();
 	    if (setColumns.size() == 0) {
 	        throw new IllegalArgumentException("No columns to update.");
 	    }
@@ -181,20 +183,21 @@ public class SQLHelper {
 	        if(fieldMapping != null) {
 	        	if(len < updateSql.length()) {
 	        		updateSql.append(", ");
+			        len = updateSql.length();
 	        	}
 	        	updateSql.append(setColumn).append(" = ?");
 		        values.add(setValue);
-		        len = updateSql.length();
 	        }
 	    }
 	    if(values.size() > 0) {
 		    if(classMapping.getReferedField() != null) {
-		    	criterias.setColumn(new ArrayList<String>(Arrays.asList(classMapping.getReferedField())));
+		    	criterias.setColumn(Arrays.asList(classMapping.getReferedField()));
 		    }
 	        QueryBuilder(updateSql, criterias, values);
-		    executeNonSelect(updateSql.toString(), values.toArray());
+		    System.out.println(updateSql.toString());
+//		    executeNonSelect(updateSql.toString(), values.toArray());
 	    }
-	    Class<? extends MarkedClass> superclass = (Class<? extends MarkedClass>) clazz.getSuperclass();
+	    Class<? extends MarkedClass> superclass = (Class<MarkedClass>) clazz.getSuperclass();
         if (superclass != null && !superclass.getName().equals("dblayer.model.MarkedClass")) {
         	criterias.setClazz(superclass);
         	update(columnCriteriaList, criterias);
@@ -206,8 +209,6 @@ public class SQLHelper {
 	// conditions : It contains the criteria that has to be included in that query (WHERE clause).
 	public static <T> void delete(Criteria conditions) throws CustomException {
 	    Helper.checkNullValues(conditions);
-	    @SuppressWarnings("unchecked")
-		Class<? extends T> clazz = (Class<? extends T>) conditions.getClazz();
 	    ClassMapping classMapping = ColumnYamlUtil.getMapping(conditions.getClazz().getName());
     	String table = classMapping.getTableName();
 	    StringBuilder deleteSql = new StringBuilder("DELETE FROM ").append(table).append(" WHERE ");
