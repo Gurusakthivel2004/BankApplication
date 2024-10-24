@@ -63,18 +63,17 @@ body {
 	flex: 3;
 	padding: 30px;
 	overflow-y: auto;
-	background: linear-gradient(360deg, #f0f1f1, #f0f1f1);
+	background: linear-gradient(160deg, #f0f1f1, white);
 	border-radius: 15px;
-	box-shadow: 40px 40px 40px rgba(3.2, 3.2, 3.3, 3.1);
 }
 
 .account-details {
 	background-color: #ffffff;
 	border-radius: 12px;
-	box-shadow: 0px 4px 12px rgba(5, 4, 0, 0.1);
+	box-shadow: 3px 12px 22px rgba(5, 4, 0, 0.1);
 	padding: 25px;
 	margin: 5% auto;
-	max-width: 90%;
+	max-width: 70%;
 	height: max-content;
 	transition: transform 0.2s ease-in-out;
 }
@@ -104,7 +103,7 @@ body {
 
 .account-details h2 {
 	font-family: 'Roboto', sans-serif;
-	color: #2b0444;
+	color: #2b5ab3;
 	font-weight: 700;
 	letter-spacing: -0.8px;
 }
@@ -178,7 +177,7 @@ nav a.logout {
 	margin-bottom: 20px;
 	font-family: 'Roboto', sans-serif;
 	color: #2a2a3b;
-	font-size: larger;
+	font-size: 16px;
 }
 
 .detail-label {
@@ -186,9 +185,7 @@ nav a.logout {
 	color: #3d3d58;
 }
 
-.inputDiv input {
-	font-weight: 700;
-}
+
 
 @media ( max-width : 768px) {
 	.left-section {
@@ -249,9 +246,9 @@ nav a.logout {
 }
 
 .detail-label {
-	font-size: 16px;
+	font-size: 15px;
 	font-weight: 500;
-	color: #2b0444;
+	color: #5A5A5A;;
 	width: 40%;
 }
 
@@ -261,9 +258,15 @@ nav a.logout {
 	margin-left: 10px;
 	border: 1px solid #ccc;
 	border-radius: 8px;
-	font-size: 16px;
+	font-size: 15px;
 	color: #2b0444;
 	transition: border-color 0.3s;
+	font-weight: 400;
+}
+
+.inputDiv input {
+	font-weight: 600;
+	color: white;;
 }
 
 .detail-input:focus {
@@ -380,8 +383,8 @@ nav a.logout {
 						src="./images/transactions.svg" /></a> <a href="transactions.html">Transactions</a>
 				</div>
 				<div class="tree-item">
-					<a href="#"><img width="30px" height="30px"
-						src="./images/payment.svg" /></a> <a href="#">Payment</a>
+					<a href="payment.html"><img width="30px" height="30px"
+						src="./images/payment.svg" /></a> <a href="payment.html">Payment</a>
 				</div>
 			</div>
 			<div class="right-section account-details">
@@ -389,6 +392,17 @@ nav a.logout {
 				
 				<div class="d-flex justify-content-between ">
 					<h2 class="ms-5 ps-5 w-100 start pt-4 pb-0">Profile</h2>
+					<div class="d-flex justify-content-end">
+						<button class="saveAllButton border-0 me-3"
+							style="display: none;" onclick="toggleSaveAll()">
+						</button>
+						<button class="editAllButton border-0 "
+							onclick="toggleEditAll()">
+						</button>
+						<button class="cancelAllButton border-0 " style="display : none"
+							onclick="toggleCancelAll()">
+						</button>
+					</div>
 				</div>
 				
 				<div class=" d-flex column">
@@ -399,9 +413,13 @@ nav a.logout {
 							style="width: 40%; margin-left: 10%;">Full Name</span>
 						<div class="inputDiv w-40">
 							<input disabled class="accNumberInput rounded p-1 px-2 w-30 bg-white"
-								style="border: 1px solid white; color: #2b0444"
+								style="border: 1px solid white; color: #2b5ab3"
 								value="Gurusakthivel V" type="text" placeHolder="Gurusakthivel V" />
 						</div>
+					    <button class="cancelButton border-0 ms-4" onclick="toggleCancel(this)" style="display: none;">
+					    </button>
+					    <button class="editOneButton border-0 ms-4" onclick="toggleEditOne(this)">
+					    </button>
 					</div>
 
 					<div class="detail-item d-flex w-100 py-3 px-2 mx-2">
@@ -409,10 +427,14 @@ nav a.logout {
 							style="width: 40%; margin-left: 10%;">Email:</span>
 						<div class="inputDiv w-40">
 							<input disabled class="accNumberInput rounded p-1 px-2 w-30 bg-white"
-								style="border: 1px solid white; color: #2b0444"
+								style="border: 1px solid white; color: #2b5ab3"
 								value="guru@gmail.com" type="text"
 								placeHolder="guru@gmail.com" />
 						</div>
+					    <button class="cancelButton border-0 ms-4" onclick="toggleCancel(this)" style="display: none;">
+					    </button>
+					    <button class="editOneButton border-0 ms-4" onclick="toggleEditOne(this)">
+					    </button>
 					</div>
 
 					<div class="detail-item d-flex  w-100 py-3 px-2 mx-2">
@@ -420,9 +442,13 @@ nav a.logout {
 							style="width: 40%; margin-left: 10%;">Phone:</span>
 						<div class="inputDiv w-40">
 							<input disabled class="accNumberInput rounded p-1 px-2 w-30 bg-white"
-								style="border: 1px solid white; color: #74C0FC"
+								style="border: 1px solid white; color: #2b5ab3"
 								value="9361409778" type="text" placeHolder="9361409778" />
 						</div>
+					    <button class="cancelButton border-0 ms-4" onclick="toggleCancel(this)" style="display: none;">
+					    </button>
+					    <button class="editOneButton border-0 ms-4" onclick="toggleEditOne(this)">
+					    </button>
 					</div>
 
 
@@ -431,9 +457,13 @@ nav a.logout {
 							style="width: 40%; margin-left: 10%;">Username</span>
 						<div class="inputDiv w-40">
 							<input disabled class="accNumberInput rounded p-1 px-2 w-30 bg-white"
-								style="border: 1px solid white; color: #2b0444"
+								style="border: 1px solid white; color: #2b5ab3"
 								value="guru" type="text" placeHolder="guru" />
 						</div>
+					    <button class="cancelButton border-0 ms-4" onclick="toggleCancel(this)" style="display: none;">
+					    </button>
+					    <button class="editOneButton border-0 ms-4" onclick="toggleEditOne(this)">
+					    </button>
 					</div>
 					
 					<div class="detail-item d-flex w-100 py-3 px-2 mx-2">
@@ -442,7 +472,7 @@ nav a.logout {
 					    <div class="inputDiv w-30">
 					        <div class="accounts-dropdown" style="margin-left: auto;">
 					            <input disabled class="accNumberInput rounded p-1 px-2 mb-0 w-30 bg-white"
-					               style="border: 1px solid white; color: #2b0444;font-weight: 700;"
+					               style="border: 1px solid white; color: #2b5ab3;font-weight: 700;"
 					               id="accountDropdown" data-bs-toggle="dropdown" 
 					               aria-expanded="false" value="Active" placeHolder="Active"/>
 					            <ul class="dropdown-menu shadow text-center"
@@ -453,16 +483,24 @@ nav a.logout {
 					            </ul>
 					        </div>
 					    </div>
+					    <button class="cancelButton border-0 ms-4" onclick="toggleCancel(this)" style="display: none;">
+					    </button>
+					    <button class="editOneButton border-0 ms-4" onclick="toggleEditOne(this)">
+					    </button>
 					</div>
 					
 					<div class="detail-item d-flex w-100  py-3 px-2 mx-2 border-0">
 						<span class="detail-label ps-4"
 							style="width: 40%; margin-left: 10%;">Address:</span>
 						<div class="inputDiv w-40">
-							<textArea disabled rows="1" cols="22" class="accNumberInput rounded px-2 w-30 bg-white"
-								style="border: 1px solid white; color: #2b0444"
+							<textArea disabled rows="2" cols="22" class="accNumberInput rounded px-2 w-30 bg-white"
+								style="border: 1px solid white; color: #2b5ab3"
 								>: Mr John Smith. 132 My Street, Kingston, New York 12401.</textArea>
 						</div>
+					    <button class="cancelButton border-0 ms-4" onclick="toggleCancel(this)" style="display: none;">
+					    </button>
+					    <button class="editOneButton border-0 ms-4" onclick="toggleEditOne(this)">
+					    </button>
 					</div>
 
 					
@@ -476,9 +514,13 @@ nav a.logout {
 							style="width: 40%; margin-left: 10%;">Pan Number:</span>
 						<div class="inputDiv w-40">
 							<input disabled class="accNumberInput rounded p-1 px-2 w-30 bg-white"
-								style="border: 1px solid white; color: #2b0444"
+								style="border: 1px solid white; color: #2b5ab3"
 								value="xxxxxxx897641" type="text" placeHolder="xxxxxxi897641" />
 						</div>
+					    <button class="cancelButton border-0 ms-4" onclick="toggleCancel(this)" style="display: none;">
+					    </button>
+					    <button class="editOneButton border-0 ms-4" onclick="toggleEditOne(this)">
+					    </button>
 					</div>
 
 					<div class="detail-item d-flex  w-100 py-3 pe-2 me-2">
@@ -486,10 +528,14 @@ nav a.logout {
 							style="width: 40%; margin-left: 10%;">Aadhar Number:</span>
 						<div class="inputDiv w-40">
 							<input disabled class="accNumberInput rounded p-1 px-2 w-30 bg-white"
-								style="border: 1px solid white; color: #2b0444"
+								style="border: 1px solid white; color: #2b5ab3"
 								value="9051 4378 4318" type="text"
 								placeHolder="9051 4378 4318" />
 						</div>
+					   	<button class="cancelButton border-0 ms-4" onclick="toggleCancel(this)" style="display: none;">
+					    </button>
+					    <button class="editOneButton border-0 ms-4" onclick="toggleEditOne(this)">
+					    </button>
 					</div>
 
 					<div class="detail-item d-flex  w-100 py-3 pe-2 me-2">
@@ -497,9 +543,13 @@ nav a.logout {
 							style="width: 40%; margin-left: 10%;">DOB:</span>
 						<div class="inputDiv w-40">
 							<input disabled class="accNumberInput rounded p-1 px-2 w-30 bg-white"
-								style="border: 1px solid white; color: #2b0444"
+								style="border: 1px solid white; color: #2b5ab3"
 								value="08/06/2004" type="text" placeHolder="08/06/2004" />
 						</div>
+					    <button class="cancelButton border-0 ms-4" onclick="toggleCancel(this)" style="display: none;">
+					    </button>
+					    <button class="editOneButton border-0 ms-4" onclick="toggleEditOne(this)">
+					    </button>
 					</div>
 
 					<div class="detail-item d-flex  w-100 py-3 pe-2 me-2">
@@ -507,9 +557,13 @@ nav a.logout {
 							style="width: 40%; margin-left: 10%;">Father name:</span>
 						<div class="inputDiv w-40">
 							<input disabled class="accNumberInput rounded p-1 ps-2 w-30 bg-white"
-								style="border: 1px solid white; color: #2b0444" value="Vijayakumar G"
+								style="border: 1px solid white; color: #2b5ab3" value="Vijayakumar G"
 								type="text" placeHolder="Vijayakumar G" />
 						</div>
+					    <button class="cancelButton border-0 ms-4" onclick="toggleCancel(this)" style="display: none;">
+					    </button>
+					    <button class="editOneButton border-0 ms-4" onclick="toggleEditOne(this)">
+					    </button>
 					</div>
 
 					<div class="detail-item d-flex  w-100 py-3 pe-2 me-2">
@@ -517,9 +571,13 @@ nav a.logout {
 							style="width: 40%; margin-left: 10%;">Mother name:</span>
 						<div class="inputDiv w-40">
 							<input disabled class="accNumberInput rounded p-1 px-2 w-30 bg-white"
-								style="color: green; border: 1px solid white; color: #2b0444"
+								style="color: green; border: 1px solid white; color: #2b5ab3"
 								value="Kavitha V" type="text" placeHolder="Kavitha V" />
 						</div>
+					    <button class="cancelButton border-0 ms-4" onclick="toggleCancel(this)" style="display: none;">
+					    </button>
+					    <button class="editOneButton border-0 ms-4" onclick="toggleEditOne(this)">
+					    </button>
 					</div>
 
 					
@@ -529,7 +587,7 @@ nav a.logout {
 					    <div class="inputDiv w-30">
 					        <div class="accounts-dropdown" style="margin-left: auto;">
 					            <input disabled class="accNumberInput rounded p-1 px-2 mb-0 bg-white"
-					               style="border: 1px solid white; color: #2b0444;font-weight: 700;"
+					               style="border: 1px solid white; color: #2b5ab3;font-weight: 700;"
 					               id="accountDropdown" data-bs-toggle="dropdown" 
 					               aria-expanded="false" value="Single" placeHolder="Single"/>
 					            <ul class="dropdown-menu shadow text-center"
@@ -540,6 +598,10 @@ nav a.logout {
 					            </ul>
 					        </div>
 					    </div>
+					    <button class="cancelButton border-0 ms-4" onclick="toggleCancel(this)" style="display: none;">
+					    </button>
+					    <button class="editOneButton border-0 ms-4" onclick="toggleEditOne(this)">
+					    </button>
 					</div>
 				</div>	
 				
@@ -551,6 +613,128 @@ nav a.logout {
 	</div>
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+    let originalValue = '';
+    let originalActiveItem = null;
+
+    function toggleEditOne(button) {
+        const parentDiv = button.closest(".detail-item");
+        const inputField = parentDiv.querySelector(".accNumberInput");
+        const editButton = parentDiv.querySelector(".editOneButton");
+        const saveButton = document.querySelector(".saveAllButton");
+        const cancelButton = parentDiv.querySelector(".cancelButton");
+        const dropdownMenu = parentDiv.querySelector(".dropdown-menu");
+
+        document.querySelector(".saveAllButton").style.display = "block";
+        document.querySelector(".editAllButton").style.display = "none";
+        
+        if (dropdownMenu !== null) {
+            dropdownMenu.style.display = "block"; 
+        }
+
+        originalValue = inputField.value; 
+        originalActiveItem = parentDiv.querySelector('.dropdown-item.active'); 
+        inputField.disabled = false;
+        editButton.style.display = "none";
+        saveButton.style.display = "block";
+        cancelButton.style.display = "block"; 
+        inputField.style.border = "1px solid #2b0444"; 
+        inputField.style.cursor = "pointer"; 
+        console.log(originalValue);
+    }
+
+    function toggleEditAll() {
+        document.querySelectorAll(".accNumberInput").forEach(a => {
+            a.disabled = false;
+            a.style.border = "1px solid #2b0444"; 
+            a.style.cursor = "pointer"; 
+        });
+        
+        document.querySelectorAll(".editOneButton").forEach(a => {
+            a.style.display = "none";
+        });
+
+        document.querySelector(".saveAllButton").style.display = "block";
+        document.querySelector(".editAllButton").style.display = "none";
+        document.querySelector(".cancelAllButton").style.display = "block";
+    }
+
+    function toggleSaveAll() {
+        document.querySelectorAll(".accNumberInput").forEach(a => {
+            a.disabled = true;
+            a.style.border = "1px solid white"; 
+            a.style.cursor = "default"; 
+        });
+        
+        document.querySelectorAll(".editOneButton").forEach(a => {
+            a.style.display = "block";
+        });
+        
+        document.querySelectorAll(".editAllButton").forEach(a => {
+            a.style.display = "block";
+        });
+        
+        document.querySelectorAll(".cancelButton").forEach(a => {
+            a.style.display = "none";
+        });
+        
+        document.querySelector(".saveAllButton").style.display = "none";
+        document.querySelector(".cancelAllButton").style.display = "none";
+        document.querySelector(".editAllButton").style.display = "block";
+    }
+
+    function toggleCancel(button) {
+        const parentDiv = button.closest('.detail-item');
+        const editButton = parentDiv.querySelector(".editOneButton");
+        document.querySelector(".editAllButton").style.display = "block";
+        const saveButton = document.querySelector(".saveAllButton");
+        const inputField = parentDiv.querySelector('.accNumberInput');
+        const dropdownMenu = parentDiv.querySelector(".dropdown-menu");
+
+        inputField.value = originalValue; 
+        inputField.placeholder = originalValue; 
+        if (originalActiveItem) {
+            parentDiv.querySelectorAll('.dropdown-item').forEach(item => item.classList.remove('active'));
+            originalActiveItem.classList.add('active');
+        }
+        
+        editButton.style.display = "block";
+        inputField.disabled = true;
+        inputField.style.cursor = "default"; 
+        button.style.display = "none"; 
+        inputField.style.border = "1px solid white";
+        
+        if (dropdownMenu !== null) {
+            dropdownMenu.style.display = "none"; 
+        }
+
+        const remainingCancelButtons = document.querySelectorAll(".cancelButton").length;
+        const visibleCancelButtons = Array.from(document.querySelectorAll(".cancelButton")).filter(btn => btn.style.display !== "none");
+
+        if (visibleCancelButtons.length === 0) {
+            saveButton.style.display = "none"; 
+        }
+    }
+
+    function toggleCancelAll() {
+        location.reload();
+        document.querySelector(".cancelAllButton").style.display = "none";
+    }
+
+    document.querySelectorAll('.dropdown-item').forEach(item => {
+        item.addEventListener('click', function (event) {
+            const parentDiv = this.closest('.detail-item'); 
+            const selectedText = event.target.innerHTML;
+            const dropdownTextElement = parentDiv.querySelector('.accNumberInput');
+            const dropdownMenu = parentDiv.querySelector(".dropdown-menu");
+
+            dropdownTextElement.value = selectedText;
+
+            parentDiv.querySelectorAll('.dropdown-item').forEach(item => item.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+</script>
 
 </body>
 </html>

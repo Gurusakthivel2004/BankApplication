@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -29,13 +30,15 @@ body {
 	font-size: 13px;
 	font-weight: 500;
 	text-decoration: none;
+	box-shadow: 40px 40px 40px rgba(3.2, 3.2, 3.3, 3.1);
 }
 
 .right-section {
 	flex: 3;
-	padding: 30px;
+	padding: 50px;
 	background-color: #f0f1f1;
 	overflow-y: auto;
+	box-shadow: 40px 40px 40px rgba(3.2, 3.2, 3.3, 3.1);
 }
 
 .tree-item {
@@ -220,7 +223,7 @@ nav a.logout {
 		display: none;
 	}
 	#balance {
-		font-size: 600%;
+		font-size: 400%;
 	}
 }
 
@@ -236,7 +239,7 @@ nav a.logout {
 }
 
 .account-details {
-	background-color: #ffffff;
+	background-color: #f0f1f1;
 	border-radius: 16px;
 	box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.05);
 	padding: 40px;
@@ -250,111 +253,207 @@ nav a.logout {
 	height: 30px;
 	border: 0;
 }
+
+.side-panel {
+	height: 100%;
+	width: 0;
+	position: fixed;
+	top: 0;
+	right: 0;
+	background-color: #ffffff;
+	overflow-x: hidden;
+	transition: 0.3s ease-in-out;
+	padding-top: 20px;
+	box-shadow: -3px 0 10px rgba(0, 0, 0, 0.2);
+	z-index: 9999;
+	border-left: 1px solid #ccc;
+}
+
+.side-panel.open {
+	width: 350px;
+}
+
+.close-btn {
+	font-size: 24px;
+	background: none;
+	border: none;
+	cursor: pointer;
+	color: #2b0444;
+	position: absolute;
+	top: 15px;
+	right: 15px;
+}
+
+.side-panel-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px 20px;
+	font-family: 'Roboto', sans-serif;
+	color: #2b0444;
+	border-bottom: 1px solid #ddd;
+	color: #2b0444;
+}
+
+.side-panel-header h2 {
+	margin: 0;
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.side-panel-content {
+	padding: 24px;
+	margin: 10px 0px;
+}
+
+hr {
+	margin: 20px 0;
+	border: 1px;
+	height: 1px;
+	background-color: black;
+}
+
+.detail-item {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	margin-bottom: 15px;
+	padding: 2px;
+}
+
+.detail-label {
+	font-weight: 500;
+	color: #2b0444;
+	min-width: 150px;
+	font-size: 16px;
+	text-align: left;
+}
+
+.detail-value {
+	font-weight: 600;
+	color: #333;
+	font-size: 16px;
+	margin-left: 10px;
+}
+
+ul {
+	padding: 0;
+	width: 100%;
+	text-align: center;
+}
+
+.dropdown-items li {
+	margin: 15px 0;
+	list-style-type: none;
+	text-align: center;
+}
+
+.dropdown-items li a {
+	text-decoration: none;
+	color: #2b0444;
+	font-weight: 700;
+	padding: 10px;
+	display: block;
+	border-radius: 8px;
+	transition: background-color 0.3s ease;
+	text-align: center;
+}
+
+.dropdown-items li a.text-danger {
+	color: red;
+}
+
+.scrollable-container {
+	max-height: 10px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	scrollbar-width: thin;
+	scrollbar-color: #2b0444;
+	margin-left: 5px;
+}
+
+.scrollable-container::-webkit-scrollbar {
+	width: 10px;
+}
+
+.scrollable-container::-webkit-scrollbar-track {
+	background: #2b0444;
+	border-radius: 30px;
+}
+
+.scrollable-container::-webkit-scrollbar-thumb {
+	background: #2b0444;
+	border-radius: 10px;
+}
+
+.scrollable-container::-webkit-scrollbar-thumb:hover {
+	background: #2b0444;
+}
+
+.logoutButton:hover {
+	color: white;
+	background: red;
+}
+
+.editButton:hover {
+	color: white;
+	background: #2b0444;
+}
 </style>
 </head>
 <body>
 	<div>
 		<nav style="background-color: white; color: #2b0444;"
-			class="d-flex justify-content-between align-items-center">
+			class="d-flex justify-content-between align-items-center shadow">
 			<div class="d-flex align-items-center">
-				<img class="w-5 h-5" width="100px" height="100px"
-					src="./images/logo2.png" />
+				<a class="m-0 p-0" href="dashboard.html"><img class="w-5 h-5"
+					width="100px" height="100px" src="./images/logo2.png" /></a>
 				<h1
 					style="padding-right: 50px; text-decoration: underline; font-family: sans-serif; letter-spacing: -0.5px; font-weight: 990; font-size: xxx-large; color: #2b0444;">Horizon</h1>
 			</div>
 			<div class="d-flex justify-content-between">
 				<div class="profile-dropdown">
-					<button class="btn"
-						style="background-color: #2b0444; padding: 10px; border-radius: 15px;"
-						type="button" id="profileDropdown" data-bs-toggle="dropdown"
-						aria-expanded="false">
+					<button class="btn" id="profileButton"
+						style="background-color: #2b0444; padding: 10px; border-radius: 15px;">
 						<img src="./images/profile.svg" width="30px" height="30px" />
 					</button>
-					<ul class="dropdown-menu shadow text-center"
-						aria-labelledby="profileDropdown">
-						<li><a class="dropdown-item" href="#" data-bs-toggle="modal"
-							data-bs-target="#profileModal">View Profile</a></li>
-						<li><a class="dropdown-item" href="profile-edit.html">Edit
-								Profile</a></li>
-						<li><a class="dropdown-item" href="#">Settings</a></li>
-						<li><hr class="dropdown-divider"></li>
-						<li><a class="dropdown-item text-danger m-0"
-							href="index.html">Logout</a></li>
-					</ul>
-				</div>
-
-				<div class="mobile-dropdown">
-					<button class="menu-toggle" type="button" id="menuDropdown"
-						data-bs-toggle="dropdown" aria-expanded="false">&#9776;</button>
-					<ul id="mobile-dropdown" class="dropdown-menu shadow"
-						aria-labelledby="menuDropdown">
-						<li><a class="dropdown-item" href="#">Account Overview</a></li>
-						<li><a class="dropdown-item" href="transactions.html">Transactions</a></li>
-						<li><a class="dropdown-item" href="#">Payments</a></li>
-						<li><a class="dropdown-item" href="#">Branch</a></li>
-					</ul>
 				</div>
 			</div>
 		</nav>
 
-		<div class="modal fade" id="profileModal" tabindex="-1"
-			aria-labelledby="profileModalLabel" aria-hidden="true"
-			style="backdrop-filter: blur(5px);height:100%;width:100%;margin-top:10%">
-			<div class="modal-dialog modal-lg">
-				<div class="modal-content"
-					style="border-radius: 15px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);">
-					<div class="modal-header"
-						style="background-color: #2b0444; color: white; border-top-left-radius: 15px; border-top-right-radius: 15px;">
-						<h5 class="modal-title text-center w-100" id="profileModalLabel">Profile
-							Overview</h5>
-						<button type="button" class="closebtn-close text-color" data-bs-dismiss="modal"
-							aria-label="Close"></button>
-					</div>
-
-					<div class="modal-body"
-						style="background-color: #ffffff; padding: 30px;border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
-
-						<div class="detail-item"
-							style="margin-bottom: 20px; display: flex; justify-content: space-between;">
-							<span class="detail-label" style="font-weight: 600;">Full
-								Name:</span> <input class="accNumberInput" type="text"
-								value="Gurusakthivel V" disabled
-								style="background-color: #f1f1f1; border: none; border-radius: 8px; padding: 10px; width: 60%; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);" />
-						</div>
-
-						<div class="detail-item"
-							style="margin-bottom: 20px; display: flex; justify-content: space-between;">
-							<span class="detail-label" style="font-weight: 600;">Email:</span>
-							<input class="accNumberInput" type="text" value="guru@gmail.com"
-								disabled
-								style="background-color: #f1f1f1; border: none; border-radius: 8px; padding: 10px; width: 60%; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);" />
-						</div>
-
-						<div class="detail-item"
-							style="margin-bottom: 20px; display: flex; justify-content: space-between;">
-							<span class="detail-label" style="font-weight: 600;">Phone:</span>
-							<input class="accNumberInput" type="text" value="9361409778"
-								disabled
-								style="background-color: #f1f1f1; border: none; border-radius: 8px; padding: 10px; width: 60%; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);" />
-						</div>
-
-						<div class="detail-item"
-							style="margin-bottom: 20px; display: flex; justify-content: space-between;">
-							<span class="detail-label" style="font-weight: 600;">Status:</span>
-							<input class="accNumberInput" type="text" value="Active" disabled
-								style="background-color: #f1f1f1; border: none; border-radius: 8px; padding: 10px; width: 60%; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);" />
-						</div>
-
-						<div style="text-align: center; margin-top: 20px;">
-							<a href="profile.html" class="btn"
-								style="background-color: #2b0444; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); transition: background-color 0.3s ease;"
-								onmouseover="this.style.backgroundColor='#1a0022';"
-								onmouseout="this.style.backgroundColor='#2b0444';">View More</a>
-						</div>
-					</div>
+		<!-- Right Side Panel -->
+		<div id="profilePanel" class="side-panel">
+			<div class="side-panel-header">
+				<h2>Profile Overview</h2>
+				<button class="close-btn" onclick="toggleProfilePanel()">&#10006;</button>
+			</div>
+			<div class="side-panel-content">
+				<div class="detail-item">
+					<span class="detail-label">Full Name:</span> <span
+						class="detail-value" style="color: #4677bd;">Gurusakthivel
+						V</span>
 				</div>
+				<div class="detail-item">
+					<span class="detail-label">Email:</span> <span class="detail-value">guru@gmail.com</span>
+				</div>
+				<div class="detail-item">
+					<span class="detail-label">Phone:</span> <span class="detail-value">9361409778</span>
+				</div>
+				<div class="detail-item">
+					<span class="detail-label">Status:</span> <span
+						class="detail-value text-green" style="color: green">Active</span>
+				</div>
+				<hr>
+				<ul class="dropdown-items">
+					<li><a class="editButton" href="profile.html">Edit Profile</a></li>
+					<li><a class="editButton" href="#">Settings</a></li>
+					<li><a class="logoutButton" href="index.html"
+						class="text-danger">Logout</a></li>
+				</ul>
 			</div>
 		</div>
+
+
 
 		<div class="full-container">
 			<div class="left-section">
@@ -374,194 +473,297 @@ nav a.logout {
 						href="transactions.html">Transactions</a>
 				</div>
 				<div class="tree-item" onclick="toggleItem(this)">
-					<a href="#"><img width="30px" height="30px"
-						src="./images/payment.svg" /></a> <a class="text-white" href="#">Payment</a>
+					<a href="payment.html"><img width="30px" height="30px"
+						src="./images/payment.svg" /></a> <a class="text-white"
+						href="payment.html">Payment</a>
 				</div>
 			</div>
 			<div class="right-section">
-				<div
-					class="w-100 d-flex align-items-center justify-content-center row">
-					<div class="d-flex w-100 column my-2">
-						<p
-							style="font-family: sans-serif; letter-spacing: -0.5px; font-weight: 800; font-size: larger; color: #2b0444; text-align: left;">
-							Welcome <span
-								style="font-size: xx-large; font-weight: 990; color: #4677bd;">Gurusakthivel
-								V</span>
-						</p>
-						<div class="accounts-dropdown" style="margin-left: auto;">
-							<button class="btn"
-								style="padding: 10px; border: 2px solid #2b0444; box-shadow: 0px 7px 9px rgba(0, 0, 0, 0.1);"
-								type="button" id="accountDropdown" data-bs-toggle="dropdown"
-								aria-expanded="false">
-								<p class="dropdown-toggle"
-									style="margin: 0; font-family: sans-serif; letter-spacing: -0.5px; font-weight: 800; font-size: larger; color: #2b0444; text-align: left;">Accounts</p>
-							</button>
-							<ul class="dropdown-menu shadow text-center"
-								aria-labelledby="accountDropdown">
-								<li><a class="dropdown-item" href="#">xxxxx610459</a></li>
-								<li><a class="dropdown-item active" href="#">xxxxx15812</a></li>
-								<li><a class="dropdown-item" href="#">xxxxx72466</a></li>
-							</ul>
+				<div class="w-100 d-flex row">
+					<div class="d-flex col">
+						<div class="col-4 d-flex flex-column my-2">
+							<p
+								style="font-family: sans-serif; letter-spacing: -0.5px; font-weight: 800; font-size: larger; color: #2b0444; text-align: left;">
+								Welcome <span
+									style="font-size: xx-large; font-weight: 990; color: #4677bd;">Gurusakthivel
+									V</span>
+							</p>
+							<div class="d-flex w-100 column">
+								<p
+									style="margin: 0; font-family: sans-serif; letter-spacing: -0.5px; font-weight: 800; font-size: larger; color: #2b0444; text-align: left;">Last
+									Updated: 13/09/2024</p>
+								<p
+									style="font-family: sans-serif; letter-spacing: -0.5px; font-weight: 800; font-size: larger; color: #2b0444; margin-left: auto; text-align: left;">Savings</p>
+							</div>
+							<hr>
+							<div class="d-flex w-100 column">
+								<p
+									style="margin: 0; font-family: sans-serif; letter-spacing: -0.5px; font-weight: 800; font-size: larger; color: #2b0444; text-align: left;">
+									Overall Balance: <span
+										style="font-size: xx-large; color: #4677bd; font-weight: 700">&#8377;
+										2,312.00</span>
+								</p>
+								<p
+									style="font-family: sans-serif; letter-spacing: -0.5px; font-weight: 800; font-size: larger; color: green; margin-left: auto; text-align: left;">Active</p>
+							</div>
+
 						</div>
-					</div>
-					<div class="d-flex w-100 column">
-						<p
-							style="margin: 0; font-family: sans-serif; letter-spacing: -0.5px; font-weight: 800; font-size: larger; color: #2b0444; text-align: left;">Last
-							Updated: 13/09/2024</p>
-						<p
-							style="font-family: sans-serif; letter-spacing: -0.5px; font-weight: 800; font-size: larger; color: #2b0444; margin-left: auto; text-align: left;">Savings</p>
-					</div>
-					<hr>
-					<div class="d-flex w-100 column">
-						<p
-							style="margin: 0; font-family: sans-serif; letter-spacing: -0.5px; font-weight: 800; font-size: larger; color: #2b0444; text-align: left;">Account
-							Balance : &#8377; 2,312.00</p>
-						<p
-							style="font-family: sans-serif; letter-spacing: -0.5px; font-weight: 800; font-size: larger; color: #2b0444; margin-left: auto; text-align: left;">Active</p>
-					</div>
 
-					<h1 id="balance"
-						style="font-family: sans-serif; letter-spacing: -0.5px; font-weight: 990; color: #2b0444; text-align: center;"
-						class="h-auto my-5">&#8377; 5,625.19</h1>
-				</div>
-
-				<div class="transaction-block d-flex row"
-					style="padding: 20px; border-radius: 8px;">
-					<div
-						class="d-flex column mb-3 justify-content-between align-items-baseline">
-						<h3
-							style="font-family: sans-serif; font-weight: 900; color: #2b0444; font-size: larger;">Transactions</h3>
-
-					</div>
-
-					<div class="transaction-history text-dark rounded">
 						<div
-							style="background-color: #2b0444; color: white; font-weight: 900; padding: 10px; border-radius: 8px; margin-bottom: 15px;"
-							class="transaction-item">
-							<p class="tid" style="width: 10%; font-size: larger;">ID</p>
-							<p class="tfrom" style="width: 20%;">Recipient Account</p>
-							<p class="tamount"
-								style="width: 15%; font-size: larger; color: white;">Amount</p>
-							<p class="ttimestamp" style="width: 20%; font-size: larger;">Date</p>
-							<p class="tstatus" style="width: 15%; font-size: larger;">Status</p>
-							<p class="ttype" style="width: 10%;">Type</p>
-							<p class="tremarks" style="width: 20%;">Remarks</p>
+							class="accounts-list text-white rounded cursor-pointer col-4 ms-5 ps-2 mt-3">
+							<div
+								style="background-color: #2b0444; color: white; font-weight: 900; padding: 10px; border-radius: 5px; margin-bottom: 10px;"
+								class="account-header d-flex text-center">
+								<p class="mb-0" style="width: 100%; font-size: 18px;">Accounts</p>
+							</div>
+
+							<div class="scrollable-container" role="button"
+								style="max-height: 200px; overflow-y: auto; overflow-x: hidden;">
+								<div class="account-item d-flex align-items-center my-1 active"
+									style="background-color: #d1e7dd; padding: 10px; border-bottom: 1px solid #ddd; border-radius: 10px;"
+									onclick="toggleActive(this)">
+									<p class="branchId ps-4 mb-0"
+										style="width: 30%; font-weight: bold; color: #2b0444;">Madurai</p>
+									<p class="accountNumber text-center mb-0"
+										style="width: 40%; color: #2b0444;">xxxxxx421012609</p>
+									<p class="accbalance text-center mb-0"
+										style="width: 30%; font-weight: bold; color: #4677bd;">&#8377;
+										5,612</p>
+								</div>
+
+								<div class="account-item d-flex align-items-center my-1 "
+									style="background-color: white; padding: 10px; border-bottom: 1px solid #ddd; border-radius: 10px;"
+									onclick="toggleActive(this)">
+									<p class="branchId ps-4 mb-0"
+										style="width: 30%; font-weight: bold; color: #2b0444;">Chennai</p>
+									<p class="accountNumber text-center mb-0"
+										style="width: 40%; color: #2b0444;">xxxxxx123456789</p>
+									<p class="accbalance text-center mb-0"
+										style="width: 30%; font-weight: bold; color: #4677bd;">&#8377;
+										10,245</p>
+								</div>
+
+								<div class="account-item d-flex align-items-center my-1"
+									style="background-color: white; padding: 10px; border-bottom: 1px solid #ddd; border-radius: 10px;"
+									onclick="toggleActive(this)">
+									<p class="branchId ps-4 mb-0"
+										style="width: 30%; font-weight: bold; color: #2b0444;">Coimbatore</p>
+									<p class="accountNumber text-center mb-0"
+										style="width: 40%; color: #2b0444;">xxxxxx987654321</p>
+									<p class="accbalance text-center mb-0"
+										style="width: 30%; font-weight: bold; color: #4677bd;">&#8377;
+										8,900</p>
+								</div>
+
+								<div class="account-item d-flex align-items-center my-1"
+									style="background-color: white; padding: 10px; border-bottom: 1px solid #ddd; border-radius: 10px;"
+									onclick="toggleActive(this)">
+									<p class="branchId ps-4 mb-0"
+										style="width: 30%; font-weight: bold; color: #2b0444;">Coimbatore</p>
+									<p class="accountNumber text-center mb-0"
+										style="width: 40%; color: #2b0444;">xxxxxx987654321</p>
+									<p class="accbalance text-center mb-0"
+										style="width: 30%; font-weight: bold; color: #4677bd;">&#8377;
+										8,900</p>
+								</div>
+
+								<div class="account-item d-flex align-items-center my-1"
+									style="background-color: white; padding: 10px; border-bottom: 1px solid #ddd; border-radius: 10px;"
+									onclick="toggleActive(this)">
+									<p class="branchId ps-4 mb-0"
+										style="width: 30%; font-weight: bold; color: #2b0444;">Coimbatore</p>
+									<p class="accountNumber text-center mb-0"
+										style="width: 40%; color: #2b0444;">xxxxxx987654321</p>
+									<p class="accbalance text-center mb-0"
+										style="width: 30%; font-weight: bold; color: #4677bd;">&#8377;
+										8,900</p>
+								</div>
+
+							</div>
 						</div>
 
-						<div class="transaction-item d-flex align-items-center"
-							style="background-color: #ffffff; padding: 10px; border-bottom: 1px solid #ddd; border-radius: 8px;">
-							<p class="tid"
-								style="width: 10%; font-weight: bold; color: #2b0444;">412</p>
-							<p class="tfrom" style="width: 20%; color: #2b0444;">xxxxxx012609</p>
-							<p class="tamount"
-								style="width: 15%; font-weight: bold; color: #28a745;">&#8377;
-								5,612</p>
-							<p class="ttimestamp"
-								style="width: 20%; font-weight: bold; color: #6c757d;">12/08/2024,
-								9:21 AM</p>
-							<p class="tstatus"
-								style="width: 15%; font-weight: bold; color: blue;">Completed</p>
-							<p class="ttype" style="width: 10%; color: #2b0444;">Credit</p>
-							<p class="tremarks" style="width: 20%; color: #2b0444;">Electrical
-								Bill</p>
-						</div>
-
-						<div class="transaction-item d-flex align-items-center"
-							style="background-color: #ffffff; padding: 10px; border-bottom: 1px solid #ddd; border-radius: 8px;">
-							<p class="tid"
-								style="width: 10%; font-weight: bold; color: #2b0444;">412</p>
-							<p class="tfrom" style="width: 20%; color: #2b0444;">xxxxxx012609</p>
-							<p class="tamount"
-								style="width: 15%; font-weight: bold; color: #28a745;">&#8377;
-								5,612</p>
-							<p class="ttimestamp"
-								style="width: 20%; font-weight: bold; color: #6c757d;">12/08/2024,
-								9:21 AM</p>
-							<p class="tstatus"
-								style="width: 15%; font-weight: bold; color: blue;">Completed</p>
-							<p class="ttype" style="width: 10%; color: #2b0444;">Credit</p>
-							<p class="tremarks" style="width: 20%; color: #2b0444;">Electrical
-								Bill</p>
-						</div>
-
-						<div class="transaction-item d-flex align-items-center"
-							style="background-color: #ffffff; padding: 10px; border-bottom: 1px solid #ddd; border-radius: 8px;">
-							<p class="tid"
-								style="width: 10%; font-weight: bold; color: #2b0444;">412</p>
-							<p class="tfrom" style="width: 20%; color: #2b0444;">xxxxxx012609</p>
-							<p class="tamount"
-								style="width: 15%; font-weight: bold; color: #28a745;">&#8377;
-								5,612</p>
-							<p class="ttimestamp"
-								style="width: 20%; font-weight: bold; color: #6c757d;">12/08/2024,
-								9:21 AM</p>
-							<p class="tstatus"
-								style="width: 15%; font-weight: bold; color: blue;">Completed</p>
-							<p class="ttype" style="width: 10%; color: #2b0444;">Credit</p>
-							<p class="tremarks" style="width: 20%; color: #2b0444;">Electrical
-								Bill</p>
-						</div>
-
-						<div class="transaction-item d-flex align-items-center"
-							style="background-color: #ffffff; padding: 10px; border-bottom: 1px solid #ddd; border-radius: 8px;">
-							<p class="tid"
-								style="width: 10%; font-weight: bold; color: #2b0444;">412</p>
-							<p class="tfrom" style="width: 20%; color: #2b0444;">xxxxxx012609</p>
-							<p class="tamount"
-								style="width: 15%; font-weight: bold; color: #28a745;">&#8377;
-								5,612</p>
-							<p class="ttimestamp"
-								style="width: 20%; font-weight: bold; color: #6c757d;">12/08/2024,
-								9:21 AM</p>
-							<p class="tstatus"
-								style="width: 15%; font-weight: bold; color: blue;">Completed</p>
-							<p class="ttype" style="width: 10%; color: #2b0444;">Credit</p>
-							<p class="tremarks" style="width: 20%; color: #2b0444;">Electrical
-								Bill</p>
-						</div>
-
-						<div class="transaction-item d-flex align-items-center"
-							style="background-color: #ffffff; padding: 10px; border-bottom: 1px solid #ddd; border-radius: 8px;">
-							<p class="tid"
-								style="width: 10%; font-weight: bold; color: #2b0444;">412</p>
-							<p class="tfrom" style="width: 20%; color: #2b0444;">xxxxxx012609</p>
-							<p class="tamount"
-								style="width: 15%; font-weight: bold; color: #28a745;">&#8377;
-								5,612</p>
-							<p class="ttimestamp"
-								style="width: 20%; font-weight: bold; color: #6c757d;">12/08/2024,
-								9:21 AM</p>
-							<p class="tstatus"
-								style="width: 15%; font-weight: bold; color: blue;">Completed</p>
-							<p class="ttype" style="width: 10%; color: #2b0444;">Credit</p>
-							<p class="tremarks" style="width: 20%; color: #2b0444;">Electrical
-								Bill</p>
-						</div>
+						<img class="p-3 ms-5 " style="border-radius: 50px"
+							src="./images/hero2.jpg" width="450px" height="300px" />
 
 					</div>
-				</div>
 
+
+					<div class="transaction-block d-flex row"
+						style="padding: 10px; border-radius: 8px;">
+						<div
+							class="d-flex column mb-3 justify-content-between align-items-baseline">
+							<h3
+								style="font-family: sans-serif; font-weight: 900; color: #2b0444; font-size: larger;">Transactions</h3>
+
+						</div>
+
+						<div class="transaction-history text-dark rounded">
+							<div
+								style="background-color: #2b0444; color: white; font-weight: 900; padding: 10px; border-radius: 8px; margin-bottom: 15px;"
+								class="transaction-item">
+								<p class="tid" style="width: 10%; font-size: larger;">ID</p>
+								<p class="tfrom" style="width: 20%;">Recipient Account</p>
+								<p class="tamount"
+									style="width: 15%; font-size: larger; color: white;">Amount</p>
+								<p class="ttimestamp" style="width: 20%; font-size: larger;">Date</p>
+								<p class="tstatus" style="width: 15%; font-size: larger;">Status</p>
+								<p class="ttype" style="width: 10%;">Type</p>
+								<p class="tremarks" style="width: 20%;">Remarks</p>
+							</div>
+
+							<div class="transaction-item d-flex align-items-center"
+								style="background-color: #ffffff; padding: 10px; border-bottom: 1px solid #ddd; border-radius: 8px;">
+								<p class="tid"
+									style="width: 10%; font-weight: bold; color: #2b0444;">412</p>
+								<p class="tfrom" style="width: 20%; color: #2b0444;">xxxxxx012609</p>
+								<p class="tamount"
+									style="width: 15%; font-weight: bold; color: #4677bd;">&#8377;
+									5,612</p>
+								<p class="ttimestamp"
+									style="width: 20%; font-weight: bold; color: #6c757d;">12/08/2024,
+									9:21 AM</p>
+								<p class="tstatus"
+									style="width: 15%; font-weight: bold; color: #2b0444;">Completed</p>
+								<p class="ttype" style="width: 10%; color: red;">Debit</p>
+								<p class="tremarks" style="width: 20%; color: #2b0444;">Electrical
+									Bill</p>
+							</div>
+
+							<div class="transaction-item d-flex align-items-center"
+								style="background-color: #ffffff; padding: 10px; border-bottom: 1px solid #ddd; border-radius: 8px;">
+								<p class="tid"
+									style="width: 10%; font-weight: bold; color: #2b0444;">412</p>
+								<p class="tfrom" style="width: 20%; color: #2b0444;">xxxxxx012609</p>
+								<p class="tamount"
+									style="width: 15%; font-weight: bold; color: #4677bd;">&#8377;
+									5,612</p>
+								<p class="ttimestamp"
+									style="width: 20%; font-weight: bold; color: #6c757d;">12/08/2024,
+									9:21 AM</p>
+								<p class="tstatus"
+									style="width: 15%; font-weight: bold; color: #2b0444;">Completed</p>
+								<p class="ttype" style="width: 10%; color: green;">Credit</p>
+								<p class="tremarks" style="width: 20%; color: #2b0444;">Electrical
+									Bill</p>
+							</div>
+
+							<div class="transaction-item d-flex align-items-center"
+								style="background-color: #ffffff; padding: 10px; border-bottom: 1px solid #ddd; border-radius: 8px;">
+								<p class="tid"
+									style="width: 10%; font-weight: bold; color: #2b0444;">412</p>
+								<p class="tfrom" style="width: 20%; color: #2b0444;">xxxxxx012609</p>
+								<p class="tamount"
+									style="width: 15%; font-weight: bold; color: #4677bd;">&#8377;
+									5,612</p>
+								<p class="ttimestamp"
+									style="width: 20%; font-weight: bold; color: #6c757d;">12/08/2024,
+									9:21 AM</p>
+								<p class="tstatus"
+									style="width: 15%; font-weight: bold; color: #2b0444;">Completed</p>
+								<p class="ttype" style="width: 10%; color: green;">Credit</p>
+								<p class="tremarks" style="width: 20%; color: #2b0444;">Electrical
+									Bill</p>
+							</div>
+
+							<div class="transaction-item d-flex align-items-center"
+								style="background-color: #ffffff; padding: 10px; border-bottom: 1px solid #ddd; border-radius: 8px;">
+								<p class="tid"
+									style="width: 10%; font-weight: bold; color: #2b0444;">412</p>
+								<p class="tfrom" style="width: 20%; color: #2b0444;">xxxxxx012609</p>
+								<p class="tamount"
+									style="width: 15%; font-weight: bold; color: #4677bd;">&#8377;
+									5,612</p>
+								<p class="ttimestamp"
+									style="width: 20%; font-weight: bold; color: #6c757d;">12/08/2024,
+									9:21 AM</p>
+								<p class="tstatus"
+									style="width: 15%; font-weight: bold; color: #2b0444;">Completed</p>
+								<p class="ttype" style="width: 10%; color: green;">Credit</p>
+								<p class="tremarks" style="width: 20%; color: #2b0444;">Electrical
+									Bill</p>
+							</div>
+
+							<div class="transaction-item d-flex align-items-center"
+								style="background-color: #ffffff; padding: 10px; border-bottom: 1px solid #ddd; border-radius: 8px;">
+								<p class="tid"
+									style="width: 10%; font-weight: bold; color: #2b0444;">412</p>
+								<p class="tfrom" style="width: 20%; color: #2b0444;">xxxxxx012609</p>
+								<p class="tamount"
+									style="width: 15%; font-weight: bold; color: #4677bd;">&#8377;
+									5,612</p>
+								<p class="ttimestamp"
+									style="width: 20%; font-weight: bold; color: #6c757d;">12/08/2024,
+									9:21 AM</p>
+								<p class="tstatus"
+									style="width: 15%; font-weight: bold; color: #2b0444;">Completed</p>
+								<p class="ttype" style="width: 10%; color: red;">Debit</p>
+								<p class="tremarks" style="width: 20%; color: #2b0444;">Electrical
+									Bill</p>
+							</div>
+
+							<div class="transaction-item d-flex align-items-center"
+								style="background-color: #ffffff; padding: 10px; border-bottom: 1px solid #ddd; border-radius: 8px;">
+								<p class="tid"
+									style="width: 10%; font-weight: bold; color: #2b0444;">412</p>
+								<p class="tfrom" style="width: 20%; color: #2b0444;">xxxxxx012609</p>
+								<p class="tamount"
+									style="width: 15%; font-weight: bold; color: #4677bd;">&#8377;
+									5,612</p>
+								<p class="ttimestamp"
+									style="width: 20%; font-weight: bold; color: #6c757d;">12/08/2024,
+									9:21 AM</p>
+								<p class="tstatus"
+									style="width: 15%; font-weight: bold; color: #2b0444;">Completed</p>
+								<p class="ttype" style="width: 10%; color: green;">Credit</p>
+								<p class="tremarks" style="width: 20%; color: #2b0444;">Electrical
+									Bill</p>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
 			</div>
 		</div>
-	</div>
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-	<script>
-		function toggleItem(element) {
-			const subitems = element.nextElementSibling;
-			while (subitems && subitems.classList.contains('tree-subitem')) {
-				subitems.style.display = subitems.style.display === 'block' ? 'none'
-						: 'block';
-				subitems = subitems.nextElementSibling;
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+		<script>
+			// Toggle the profile side panel
+			function toggleProfilePanel() {
+				const panel = document.getElementById('profilePanel');
+				panel.classList.toggle('open');
 			}
-		}
-		var profileModal = document.getElementById('profileModal');
-		profileModal.addEventListener('show.bs.modal', function() {
-			document.body.classList.add('blur');
-		});
-		profileModal.addEventListener('hidden.bs.modal', function() {
-			document.body.classList.remove('blur');
-		});
-	</script>
+
+			document.getElementById('profileButton').addEventListener('click',
+					toggleProfilePanel);
+
+			function toggleActive(element) {
+				const currentActive = document
+						.querySelector('.account-item.active');
+				if (currentActive) {
+					currentActive.classList.remove('active');
+					currentActive.style.backgroundColor = 'white';
+				}
+				element.classList.toggle('active');
+				element.style.backgroundColor = element.classList
+						.contains('active') ? '#d1e7dd' : 'white';
+			}
+
+			function toggleItem(element) {
+				const subitems = element.nextElementSibling;
+				while (subitems && subitems.classList.contains('tree-subitem')) {
+					subitems.style.display = subitems.style.display === 'block' ? 'none'
+							: 'block';
+					subitems = subitems.nextElementSibling;
+				}
+			}
+			var profileModal = document.getElementById('profileModal');
+			profileModal.addEventListener('show.bs.modal', function() {
+				document.body.classList.add('blur');
+			});
+			profileModal.addEventListener('hidden.bs.modal', function() {
+				document.body.classList.remove('blur');
+			});
+		</script>
 </body>
 </html>

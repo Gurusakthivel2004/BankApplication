@@ -197,12 +197,138 @@ nav a.logout {
 	font-size: 24px;
 	color: #2b0444;
 }
+
+.closebtn-close {
+	background: url('./images/close.svg') no-repeat center center;
+	width: 30px;
+	height: 30px;
+	border: 0;
+}
+/* Side panel (hidden initially) */
+.side-panel {
+	height: 100%;
+	width: 0;
+	position: fixed;
+	top: 0;
+	right: 0; /* Move to the right side */
+	background-color: #ffffff;
+	overflow-x: hidden;
+	transition: 0.5s ease-in-out;
+	padding-top: 20px;
+	box-shadow: -3px 0 10px rgba(0, 0, 0, 0.2);
+	z-index: 9999;
+	border-left: 1px solid #ccc;
+}
+
+/* Open the side panel */
+.side-panel.open {
+	width: 350px; /* Adjust the width */
+}
+
+/* Close button styling */
+.close-btn {
+	font-size: 24px;
+	background: none;
+	border: none;
+	cursor: pointer;
+	color: #2b0444;
+	position: absolute;
+	top: 15px;
+	right: 15px;
+}
+
+.side-panel-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px 20px;
+	font-family: 'Roboto', sans-serif;
+	color: #2b0444;
+	border-bottom: 1px solid #ddd;
+	color: #2b0444;
+}
+
+.side-panel-header h2 {
+	margin: 0;
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.side-panel-content {
+	padding: 24px;
+	margin: 10px 0px;
+}
+
+hr {
+	margin: 20px 0;
+	border: 1px;
+	height: 1px;
+	background-color: black;
+}
+
+/* Adjusting detail-item for row layout */
+.detail-item {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	margin-bottom: 15px;
+	padding: 2px;
+}
+
+/* Detail label styling with fixed width to align consistently */
+.detail-label {
+	font-weight: 500;
+	color: #2b0444;
+	min-width: 150px;
+	font-size: 16px;
+	text-align: left;
+}
+
+/* Value styling */
+.detail-value {
+	font-weight: 600;
+	color: #333;
+	font-size: 16px;
+	margin-left: 10px;
+}
+
+/* Adjust list items for left-aligned text */
+ul {
+	padding: 0;
+	width: 100%;
+	text-align: center;
+}
+
+.dropdown-items li {
+	margin: 15px 0;
+	list-style-type: none;
+	text-align: center;
+}
+
+.dropdown-items li a {
+	text-decoration: none;
+	color: #2b0444;
+	font-weight: 700;
+	padding: 10px;
+	display: block;
+	border-radius: 8px;
+	transition: background-color 0.3s ease;
+	text-align: center; /* Ensure text is left-aligned */
+}
+
+.dropdown-items li a:hover {
+	background-color: #f2f2f2;
+}
+
+.dropdown-items li a.text-danger {
+	color: red;
+}
 </style>
 </head>
 <body>
 	<div>
 		<nav style="background-color: white; color: #2b0444;"
-			class="d-flex justify-content-between align-items-center">
+			class="d-flex justify-content-between align-items-center shadow">
 			<div class="d-flex align-items-center">
 				<a class="m-0 p-0" href="dashboard.html"><img class="w-5 h-5"
 					width="100px" height="100px" src="./images/logo2.png" /></a>
@@ -211,39 +337,43 @@ nav a.logout {
 			</div>
 			<div class="d-flex justify-content-between">
 				<div class="profile-dropdown">
-
-					<button class="btn"
-						style="background-color: #2b0444; padding: 10px; border-radius: 15px;"
-						type="button" id="profileDropdown" data-bs-toggle="dropdown"
-						aria-expanded="false">
+					<button class="btn" id="profileButton"
+						style="background-color: #2b0444; padding: 10px; border-radius: 15px;">
 						<img src="./images/profile.svg" width="30px" height="30px" />
 					</button>
-					<ul class="dropdown-menu shadow text-center"
-						aria-labelledby="profileDropdown">
-						<li><a class="dropdown-item" href="profile.html">View
-								Profile</a></li>
-						<li><a class="dropdown-item" href="profile-edit.html">Edit
-								Profile</a></li>
-						<li><a class="dropdown-item" href="#">Settings</a></li>
-						<li><hr class="dropdown-divider"></li>
-						<li><a class="dropdown-item# text-danger m-0"
-							href="index.html">Logout</a></li>
-					</ul>
-				</div>
-
-				<div class="mobile-dropdown">
-					<button class="menu-toggle" type="button" id="menuDropdown"
-						data-bs-toggle="dropdown" aria-expanded="false">&#9776;</button>
-					<ul id="mobile-dropdown" class="dropdown-menu shadow"
-						aria-labelledby="profileDropdown">
-						<li><a class="dropdown-item" href="#">Account Overview</a></li>
-						<li><a class="dropdown-item" href="transactions.html">Transactions</a></li>
-						<li><a class="dropdown-item" href="#">Payments</a></li>
-						<li><a class="dropdown-item" href="#">Branch</a></li>
-					</ul>
 				</div>
 			</div>
 		</nav>
+
+		<!-- Right Side Panel -->
+		<div id="profilePanel" class="side-panel">
+			<div class="side-panel-header">
+				<h2>Profile Overview</h2>
+				<button class="close-btn" onclick="toggleProfilePanel()">&#10006;</button>
+			</div>
+			<div class="side-panel-content">
+				<div class="detail-item">
+					<span class="detail-label">Full Name:</span> <span
+						class="detail-value">Gurusakthivel V</span>
+				</div>
+				<div class="detail-item">
+					<span class="detail-label">Email:</span> <span class="detail-value">guru@gmail.com</span>
+				</div>
+				<div class="detail-item">
+					<span class="detail-label">Phone:</span> <span class="detail-value">9361409778</span>
+				</div>
+				<div class="detail-item">
+					<span class="detail-label">Status:</span> <span
+						class="detail-value">Active</span>
+				</div>
+				<hr>
+				<ul class="dropdown-items">
+					<li><a href="profile.html">Edit Profile</a></li>
+					<li><a href="#">Settings</a></li>
+					<li><a href="index.html" class="text-danger">Logout</a></li>
+				</ul>
+			</div>
+		</div>
 		<div class="full-container">
 			<div class="left-section">
 				<div class="tree-item" onclick="toggleItem(this)">
@@ -262,8 +392,8 @@ nav a.logout {
 						href="transactions.html">Transactions</a>
 				</div>
 				<div class="tree-item" onclick="toggleItem(this)">
-					<a href="#"><img width="30px" height="30px"
-						src="./images/payment.svg" /></a> <a class="text-white" href="#">Payment</a>
+					<a href="payment.html"><img width="30px" height="30px"
+						src="./images/payment.svg" /></a> <a class="text-white" href="payment.html">Payment</a>
 				</div>
 			</div>
 			<div class="right-section">
@@ -446,6 +576,12 @@ nav a.logout {
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 	<script>
+		function toggleProfilePanel() {
+			const panel = document.getElementById('profilePanel');
+			panel.classList.toggle('open');
+		}
+	
+		document.getElementById('profileButton').addEventListener('click',toggleProfilePanel);
 		function toggleItem(element) {
 			const subitems = element.nextElementSibling;
 			while (subitems && subitems.classList.contains('tree-subitem')) {
